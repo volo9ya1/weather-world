@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather World — Атмосферная Погода</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="theme-sunny">
+
+  <canvas id="weather-canvas"></canvas>
+
+  <div class="app-container">
+    <header class="search-box">
+      <input type="text" id="city-input" placeholder="Введите город (например, Ташкент)..." />
+      <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </header>
+
+    <main class="weather-card">
+      <div class="weather-header">
+        <h1 id="city-name">Загрузка...</h1>
+        <p id="weather-desc">Определяем погоду</p>
+      </div>
+
+      <div class="temperature-box">
+        <span id="temp-value">--</span><span class="deg">°C</span>
+      </div>
+
+      <div class="weather-details">
+        <div class="detail-item">
+          <i class="fa-solid fa-droplet"></i>
+          <span>Влажность</span>
+          <strong id="humidity">--%</strong>
+        </div>
+        <div class="detail-item">
+          <i class="fa-solid fa-wind"></i>
+          <span>Ветер</span>
+          <strong id="wind-speed">-- м/с</strong>
+        </div>
+        <div class="detail-item">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Давление</span>
+          <strong id="pressure">-- мм</strong>
+        </div>
+      </div>
+    </main>
+
+    <section class="recommendations">
+      <h2><i class="fa-solid fa-lightbulb"></i> Советы на сегодня</h2>
+      <div class="rec-grid">
+        <div class="rec-card">
+          <i class="fa-solid fa-shirt rec-icon" id="icon-clothes"></i>
+          <div>
+            <h4>Что надеть?</h4>
+            <p id="rec-clothes">Анализ температуры...</p>
+          </div>
+        </div>
+
+        <div class="rec-card">
+          <i class="fa-solid fa-person-walking rec-icon" id="icon-walk"></i>
+          <div>
+            <h4>Идти ли гулять?</h4>
+            <p id="rec-walk">Анализ условий...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
