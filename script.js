@@ -3,7 +3,7 @@
 // Вставьте ваш API-ключ OpenWeatherMap при наличии. Если оставить пустым —
 // запустится встроенный ДЕМО-режим с генерацией условий.
 // ==========================================================================
-const API_KEY = ""; 
+const API_KEY = "a768be6a11bebe3aa2e0be24666a1c02"; 
 
 // 🌧️ CANVAS ЭФФЕКТЫ
 const canvas = document.getElementById('weather-canvas');
