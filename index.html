@@ -10,28 +10,27 @@
 <body>
   <canvas id="weather-canvas"></canvas>
 
- <!-- Стартовое окно выбора режима (LazyMedia style) -->
-<div id="mode-modal" class="modal-overlay">
-  <div class="modal-content glass-card">
-    <h2 data-i18n="modalTitle">ВЫБЕРИТЕ РЕЖИМ ИНТЕРФЕЙСА:</h2>
-    
-    <div class="modal-options">
-      <div class="option-card" onclick="selectMode('mobile')">
-        <div class="option-icon">📱</div>
-        <h3 data-i18n="modalMobileTitle">СМАРТФОН / ПЛАНШЕТ</h3>
-        <p data-i18n="modalMobileDesc">Выберите этот режим, если хотите использовать сенсорный экран для управления</p>
-        <button type="button" class="modal-btn" onclick="selectMode('mobile'); event.stopPropagation();" data-i18n="modalMobileBtn">СЕНСОРНЫЙ</button>
-      </div>
+  <div id="mode-modal" class="modal-overlay">
+    <div class="modal-content glass-card">
+      <h2 data-i18n="modalTitle">ВЫБЕРИТЕ РЕЖИМ ИНТЕРФЕЙСА:</h2>
+      
+      <div class="modal-options">
+        <div class="option-card" onclick="selectMode('mobile')">
+          <div class="option-icon">📱</div>
+          <h3 data-i18n="modalMobileTitle">СМАРТФОН / ПЛАНШЕТ</h3>
+          <p data-i18n="modalMobileDesc">Выберите этот режим, если хотите использовать сенсорный экран для управления</p>
+          <button type="button" class="modal-btn" onclick="selectMode('mobile'); event.stopPropagation();" data-i18n="modalMobileBtn">СЕНСОРНЫЙ</button>
+        </div>
 
-      <div class="option-card" onclick="selectMode('pc')">
-        <div class="option-icon">💻</div>
-        <h3 data-i18n="modalPcTitle">ПК / TV BOX</h3>
-        <p data-i18n="modalPcDesc">Выберите этот режим для работы на широком экране с клавиатурой и мышью</p>
-        <button type="button" class="modal-btn" onclick="selectMode('pc'); event.stopPropagation();" data-i18n="modalPcBtn">ПК РЕЖИМ</button>
+        <div class="option-card" onclick="selectMode('pc')">
+          <div class="option-icon">💻</div>
+          <h3 data-i18n="modalPcTitle">ПК / TV BOX</h3>
+          <p data-i18n="modalPcDesc">Выберите этот режим для работы на широком экране с клавиатурой и мышью</p>
+          <button type="button" class="modal-btn" onclick="selectMode('pc'); event.stopPropagation();" data-i18n="modalPcBtn">ПК РЕЖИМ</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <div class="top-bar">
     <div class="device-toggle-bar">
@@ -54,11 +53,14 @@
   </div>
 
   <div id="app-container" class="glass-container mode-pc">
-    <!-- Левый блок погоды -->
     <section class="glass-card section-main">
-      <h1 id="city-name">Загрузка...</h1>
-      <p id="weather-desc">...</p>
-      <h2 id="temp-value">--</h2>
+      <div id="city-photo-corner"></div>
+
+      <div>
+        <h1 id="city-name">Загрузка...</h1>
+        <p id="weather-desc">...</p>
+        <h2 id="temp-value">--</h2>
+      </div>
       
       <div class="weather-details">
         <div class="weather-info-item">
@@ -89,18 +91,19 @@
       </div>
     </section>
 
-    <!-- Правый блок советов -->
     <section class="glass-card section-details">
-      <h2 data-i18n="recTitle">💡 Советы на сегодня</h2>
-      
-      <div class="rec-block">
-        <h3 data-i18n="clothesTitle">Что надеть?</h3>
-        <p id="rec-clothes">Загрузка...</p>
-      </div>
+      <div>
+        <h2 data-i18n="recTitle">💡 Советы на сегодня</h2>
+        
+        <div class="rec-block">
+          <h3 data-i18n="clothesTitle">Что надеть?</h3>
+          <p id="rec-clothes">Загрузка...</p>
+        </div>
 
-      <div class="rec-block">
-        <h3 data-i18n="walkTitle">Идти ли гулять?</h3>
-        <p id="rec-walk">Загрузка...</p>
+        <div class="rec-block">
+          <h3 data-i18n="walkTitle">Идти ли гулять?</h3>
+          <p id="rec-walk">Загрузка...</p>
+        </div>
       </div>
     </section>
   </div>
