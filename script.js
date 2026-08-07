@@ -13,6 +13,16 @@ const i18n = {
     walkTitle: "Идти ли гулять?",
     windUnit: "м/с",
     pressureUnit: "мм",
+    conditions: {
+      clear: "Ясно",
+      clouds: "Облачно",
+      rain: "Дождь",
+      drizzle: "Морось",
+      thunderstorm: "Гроза",
+      snow: "Снег",
+      mist: "Туман",
+      fog: "Густой туман"
+    },
     clothes: {
       hot: "Легкая майка, шорты и кепка. Не забудьте воду!",
       warm: "Футболка и легкая толстовка или джинсовка.",
@@ -37,6 +47,16 @@ const i18n = {
     walkTitle: "Go for a walk?",
     windUnit: "m/s",
     pressureUnit: "mmHg",
+    conditions: {
+      clear: "Clear sky",
+      clouds: "Clouds",
+      rain: "Rain",
+      drizzle: "Drizzle",
+      thunderstorm: "Thunderstorm",
+      snow: "Snow",
+      mist: "Mist",
+      fog: "Fog"
+    },
     clothes: {
       hot: "Light t-shirt, shorts, and a cap. Don't forget water!",
       warm: "T-shirt and a light hoodie or denim jacket.",
@@ -61,6 +81,16 @@ const i18n = {
     walkTitle: "Sayrga chiqish kerakmi?",
     windUnit: "m/s",
     pressureUnit: "mm Hg",
+    conditions: {
+      clear: "Ochiq havo",
+      clouds: "Bulutli",
+      rain: "Yomg'ir",
+      drizzle: "Maydalab yog'adigan yomg'ir",
+      thunderstorm: "Momaqaldiroq",
+      snow: "Qor",
+      mist: "Tuman",
+      fog: "Qalin tuman"
+    },
     clothes: {
       hot: "Yengil futbolka, shorti va kepka. Suv olishni unutmang!",
       warm: "Futbolka va yengil svetshot yoki djinsovka.",
@@ -209,7 +239,8 @@ function getUserLocation() {
 
 async function fetchWeatherByCoords(lat, lon) {
   try {
-    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=${currentLang}&appid=${API_KEY}`);
+    const apiLang = currentLang === 'uz' ? 'en' : currentLang;
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=${apiLang}&appid=${API_KEY}`);
     if (!res.ok) throw new Error('Error');
     const data = await res.json();
     processWeatherData(data);
@@ -220,7 +251,8 @@ async function fetchWeatherByCoords(lat, lon) {
 
 async function fetchWeather(city) {
   try {
-    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&lang=${currentLang}&appid=${API_KEY}`);
+    const apiLang = currentLang === 'uz' ? 'en' : currentLang;
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&lang=${apiLang}&appid=${API_KEY}`);
     if (!res.ok) throw new Error('City not found');
     const data = await res.json();
     processWeatherData(data);
@@ -264,9 +296,11 @@ function updateUI(weather) {
   updateStaticTranslations();
 
   const t = i18n[currentLang];
+  const translatedDesc = t.conditions[weather.condition] || weather.description;
+
   document.getElementById('city-name').textContent = weather.city;
   document.getElementById('temp-value').textContent = weather.temp > 0 ? `+${weather.temp}` : weather.temp;
-  document.getElementById('weather-desc').textContent = weather.description;
+  document.getElementById('weather-desc').textContent = translatedDesc;
   document.getElementById('humidity').textContent = `${weather.humidity}%`;
   document.getElementById('wind-speed').textContent = `${weather.wind} ${t.windUnit}`;
   document.getElementById('pressure').textContent = `${weather.pressure} ${t.pressureUnit}`;
@@ -336,33 +370,41 @@ function generateRecommendations(temp, condition) {
   }
 }
 
-// События переключения языка
+// События переключения языка (без повторного запроса к API)
 const langSelect = document.getElementById('lang-select');
-langSelect.value = currentLang;
+if (langSelect) {
+  langSelect.value = currentLang;
 
-langSelect.addEventListener('change', (e) => {
-  currentLang = e.target.value;
-  localStorage.setItem('weather_app_lang', currentLang);
-  
-  if (currentWeatherData) {
-    fetchWeather(currentWeatherData.name);
-  } else {
-    getUserLocation();
-  }
-});
+  langSelect.addEventListener('change', (e) => {
+    currentLang = e.target.value;
+    localStorage.setItem('weather_app_lang', currentLang);
+    
+    if (currentWeatherData) {
+      processWeatherData(currentWeatherData);
+    } else {
+      getUserLocation();
+    }
+  });
+}
 
 // Поиск
-document.getElementById('search-btn').addEventListener('click', () => {
-  const city = document.getElementById('city-input').value.trim();
-  if (city) fetchWeather(city);
-});
-
-document.getElementById('city-input').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
+const searchBtn = document.getElementById('search-btn');
+if (searchBtn) {
+  searchBtn.addEventListener('click', () => {
     const city = document.getElementById('city-input').value.trim();
     if (city) fetchWeather(city);
-  }
-});
+  });
+}
+
+const cityInput = document.getElementById('city-input');
+if (cityInput) {
+  cityInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const city = cityInput.value.trim();
+      if (city) fetchWeather(city);
+    }
+  });
+}
 
 // Старт
 getUserLocation();
