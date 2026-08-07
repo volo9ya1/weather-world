@@ -1,7 +1,5 @@
 // ==========================================================================
 // 🔑 КОНФИГУРАЦИЯ API
-// Вставьте ваш API-ключ OpenWeatherMap при наличии. Если оставить пустым —
-// запустится встроенный ДЕМО-режим с генерацией условий.
 // ==========================================================================
 const API_KEY = "a768be6a11bebe3aa2e0be24666a1c02"; 
 
@@ -124,7 +122,7 @@ function getUserLocation() {
         const { latitude, longitude } = position.coords;
         fetchWeatherByCoords(latitude, longitude);
       },
-      (error) => {
+      () => {
         fetchWeather('Ташкент');
       }
     );
@@ -181,7 +179,7 @@ async function fetchWeather(city) {
       isNight: isNightTime(data.sys.sunrise, data.sys.sunset)
     });
   } catch (err) {
-    alert(err.message);
+    useMockData(city);
   }
 }
 
@@ -205,13 +203,21 @@ function updateUI(weather) {
 function applyThemeAndEffects(condition, isNight) {
   document.body.className = '';
 
+  // Ночная тема применяется фоном, но эффекты выбираются по погоде
   if (isNight) {
     document.body.classList.add('theme-night');
-    startWeatherAnimation('stars');
+    if (condition.includes('rain') || condition.includes('drizzle') || condition.includes('thunderstorm')) {
+      startWeatherAnimation('rain');
+    } else if (condition.includes('snow')) {
+      startWeatherAnimation('snow');
+    } else {
+      startWeatherAnimation('stars');
+    }
     return;
   }
 
-  if (condition.includes('rain') || condition.includes('drizzle')) {
+  // Дневные темы
+  if (condition.includes('rain') || condition.includes('drizzle') || condition.includes('thunderstorm')) {
     document.body.classList.add('theme-rainy');
     startWeatherAnimation('rain');
   } else if (condition.includes('snow')) {
@@ -230,6 +236,7 @@ function generateRecommendations(temp, condition) {
   const clothesElem = document.getElementById('rec-clothes');
   const walkElem = document.getElementById('rec-walk');
 
+  // Одежда
   if (temp >= 25) {
     clothesElem.textContent = "Легкая майка, шорты и кепка. Не забудьте воду!";
   } else if (temp >= 15) {
@@ -240,12 +247,18 @@ function generateRecommendations(temp, condition) {
     clothesElem.textContent = "Зимний пуховик, шапка, шарф и перчатки!";
   }
 
-  if (condition.includes('rain')) {
-    walkElem.textContent = "Лучше остаться дома с чаем или взять крепкий зонт ☔";
-  } else if (condition.includes('snow')) {
+  // Прогулка (исправлена очередность условий)
+  const isRainy = condition.includes('rain') || condition.includes('drizzle') || condition.includes('thunder');
+  const isSnowy = condition.includes('snow');
+
+  if (isRainy) {
+    walkElem.textContent = "На улице дождь. Лучше остаться дома с чаем или взять зонт ☔";
+  } else if (isSnowy) {
     walkElem.textContent = "Отличное время для снежков и прогулки по парку ❄️";
-  } else if (temp > 30) {
-    walkElem.textContent = "Слишком жарко. Прогулку лучше отложить на вечер 🌅";
+  } else if (temp >= 40) {
+    walkElem.textContent = "Слишком жарко. Держитесь в тени и пейте больше воды 🌅";
+  } else if (temp >= 22) {
+    walkElem.textContent = "Хорошая температура для прогулки или занятий спортом ☀️";
   } else {
     walkElem.textContent = "Прекрасная погода для прогулок на свежем воздухе! 🚶‍♂️";
   }
@@ -256,10 +269,10 @@ function useMockData(cityName) {
     'дождь': { city: 'Лондон', temp: 14, humidity: 88, wind: 6.5, pressure: 748, condition: 'rain', description: 'Небольшой дождь', isNight: false },
     'снег': { city: 'Москва', temp: -5, humidity: 90, wind: 3.1, pressure: 755, condition: 'snow', description: 'Снегопад', isNight: false },
     'ночь': { city: 'Токио', temp: 18, humidity: 60, wind: 2.0, pressure: 760, condition: 'clear', description: 'Ясная ночь', isNight: true },
-    'default': { city: cityName || 'Ташкент', temp: 28, humidity: 32, wind: 4.0, pressure: 752, condition: 'clear', description: 'Солнечно и ясно', isNight: false }
+    'default': { city: cityName || 'Ташкент', temp: 28, humidity: 32, wind: 4.0, pressure: 752, condition: 'clouds', description: 'Облачно', isNight: true }
   };
 
-  const key = cityName.toLowerCase();
+  const key = cityName ? cityName.toLowerCase() : 'default';
   const data = mocks[key] || mocks['default'];
   updateUI(data);
 }
