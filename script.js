@@ -30,7 +30,7 @@ const i18n = {
       cold: "Зимний пуховик, шапка, шарф и перчатки!"
     },
     walk: {
-      rain: "На улице дождь. Лучше остаться дома с чаем или взять зонт ☔",
+      rain: "На улице дождь. Лучше остаться дома с горячим чаем или взять зонт ☔",
       snow: "Отличное время для снежков и прогулки по парку ❄️",
       extremeHot: "Слишком жарко. Держитесь в тени и пейте больше воды 🌅",
       good: "Хорошая температура для прогулки или занятий спортом ☀️",
@@ -64,7 +64,7 @@ const i18n = {
       cold: "Winter coat, hat, scarf, and gloves!"
     },
     walk: {
-      rain: "It's raining. Better stay inside with tea or bring an umbrella ☔",
+      rain: "It's raining. Better stay inside with hot tea or bring an umbrella ☔",
       snow: "Great time for snowball fights and a park walk ❄️",
       extremeHot: "Too hot. Stay in the shade and drink plenty of water 🌅",
       good: "Great temperature for a walk or outdoor workout ☀️",
@@ -98,7 +98,7 @@ const i18n = {
       cold: "Qishki kurtka, qalpoq, sharf va qo'lqoplar!"
     },
     walk: {
-      rain: "Tashqarida yomg'ir yog'moqda. Soyabon oling yoki uyda qoling ☔",
+      rain: "Tashqarida yomg'ir yog'moqda. Issiq soyabon oling yoki uyda qoling ☔",
       snow: "Qor o'ynash va parkda sayr qilish uchun ajoyib vaqt ❄️",
       extremeHot: "Juda issiq. Soyada bo'ling va ko'proq suv iching 🌅",
       good: "Sayr qilish yoki sport bilan shug'ullanish uchun yaxshi havo ☀️",
