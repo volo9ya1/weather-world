@@ -115,50 +115,47 @@ const i18n = {
 
 let currentWeatherData = null;
 
+// Переключение режимов приложения
 function setDeviceMode(mode) {
   const container = document.getElementById('app-container');
-  const btnPc = document.getElementById('btn-pc');
-  const btnMobile = document.getElementById('btn-mobile');
+  if (!container) return;
 
   if (mode === 'pc') {
-    container.classList.replace('mode-mobile', 'mode-pc');
-    btnPc.classList.add('active');
-    btnMobile.classList.remove('active');
+    container.classList.remove('mode-mobile');
+    container.classList.add('mode-pc');
   } else {
-    container.classList.replace('mode-pc', 'mode-mobile');
-    btnMobile.classList.add('active');
-    btnPc.classList.remove('active');
+    container.classList.remove('mode-pc');
+    container.classList.add('mode-mobile');
   }
-  localStorage.setItem('user_device_mode', mode);
 }
 
 function selectMode(mode) {
   setDeviceMode(mode);
   const modal = document.getElementById('mode-modal');
   if (modal) {
-    modal.style.setProperty('display', 'none', 'important');
+    modal.style.display = 'none';
   }
 }
 
+// При старте ВСЕГДА вылезает окно
 window.addEventListener('DOMContentLoaded', () => {
-  const savedMode = localStorage.getItem('user_device_mode');
-  if (!savedMode) {
-    document.getElementById('mode-modal').style.display = 'flex';
-  } else {
-    document.getElementById('mode-modal').style.display = 'none';
-    setDeviceMode(savedMode);
+  const modal = document.getElementById('mode-modal');
+  if (modal) {
+    modal.style.display = 'flex';
   }
 });
 
-// Анимационный холст (Canvas)
+// Холст (Canvas) для 4K Экранов
 const canvas = document.getElementById('weather-canvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
 let particles = [], animationFrameId = null, currentEffect = 'none';
 
 function resizeCanvas() {
   if (!canvas) return;
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+  if (ctx) ctx.scale(dpr, dpr);
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
@@ -166,51 +163,64 @@ resizeCanvas();
 class Particle {
   constructor(type) {
     this.type = type;
-    this.reset();
+    this.reset(true);
   }
-  reset() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
+
+  reset(initial = false) {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    this.x = Math.random() * width;
+    this.y = initial ? Math.random() * height : -20;
+
     if (this.type === 'rain') {
-      this.length = Math.random() * 20 + 10;
-      this.speed = Math.random() * 10 + 15;
-      this.opacity = Math.random() * 0.5 + 0.3;
+      this.length = Math.random() * 25 + 15;
+      this.speed = Math.random() * 12 + 18;
+      this.opacity = Math.random() * 0.4 + 0.3;
     } else if (this.type === 'snow') {
-      this.radius = Math.random() * 4 + 1;
-      this.speed = Math.random() * 2 + 1;
+      this.radius = Math.random() * 3.5 + 1;
+      this.speed = Math.random() * 1.8 + 0.8;
       this.velX = Math.random() * 1 - 0.5;
     } else if (this.type === 'stars') {
-      this.radius = Math.random() * 1.5 + 0.5;
+      this.radius = Math.random() * 1.8 + 0.5;
       this.alpha = Math.random();
-      this.alphaSpeed = Math.random() * 0.02 + 0.005;
+      this.alphaSpeed = Math.random() * 0.015 + 0.003;
     }
   }
+
   update() {
+    const height = window.innerHeight;
+
     if (this.type === 'rain') {
       this.y += this.speed;
-      if (this.y > canvas.height) { this.y = -this.length; this.x = Math.random() * canvas.width; }
+      if (this.y > height + 20) this.reset();
     } else if (this.type === 'snow') {
-      this.y += this.speed; this.x += this.velX;
-      if (this.y > canvas.height) { this.y = -this.radius; this.x = Math.random() * canvas.width; }
+      this.y += this.speed;
+      this.x += this.velX;
+      if (this.y > height + 10) this.reset();
     } else if (this.type === 'stars') {
       this.alpha += this.alphaSpeed;
       if (this.alpha > 1 || this.alpha < 0) this.alphaSpeed = -this.alphaSpeed;
     }
   }
+
   draw() {
     if (!ctx) return;
     ctx.beginPath();
     if (this.type === 'rain') {
       ctx.strokeStyle = `rgba(174, 194, 224, ${this.opacity})`;
       ctx.lineWidth = 1.5;
-      ctx.moveTo(this.x, this.y); ctx.lineTo(this.x, this.y + this.length);
+      ctx.moveTo(this.x, this.y);
+      ctx.lineTo(this.x, this.y + this.length);
       ctx.stroke();
     } else if (this.type === 'snow') {
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
     } else if (this.type === 'stars') {
       ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(this.alpha)})`;
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fill();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
     }
   }
 }
@@ -219,15 +229,28 @@ function startWeatherAnimation(effectType) {
   if (!canvas || currentEffect === effectType) return;
   currentEffect = effectType;
   if (animationFrameId) cancelAnimationFrame(animationFrameId);
+  
   particles = [];
-  let count = effectType === 'rain' ? 150 : effectType === 'snow' ? 100 : effectType === 'stars' ? 200 : 0;
-  for (let i = 0; i < count; i++) particles.push(new Particle(effectType));
+  const is4K = window.innerWidth >= 2560;
+  let count = 0;
+  
+  if (effectType === 'rain') count = is4K ? 350 : 180;
+  else if (effectType === 'snow') count = is4K ? 250 : 120;
+  else if (effectType === 'stars') count = is4K ? 450 : 250;
+
+  for (let i = 0; i < count; i++) {
+    particles.push(new Particle(effectType));
+  }
 
   function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => { p.update(); p.draw(); });
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    particles.forEach(p => {
+      p.update();
+      p.draw();
+    });
     animationFrameId = requestAnimationFrame(animate);
   }
+
   if (effectType !== 'none') animate();
 }
 
@@ -240,7 +263,6 @@ async function fetchUVIndex(lat, lon) {
   } catch (err) { return 0; }
 }
 
-// Загрузка фото без зависаний
 function updateCornerCityPhoto(cityName) {
   const photoElem = document.getElementById('city-photo-corner');
   if (!photoElem) return;
