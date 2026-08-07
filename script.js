@@ -150,7 +150,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Canvas Анимации
 const canvas = document.getElementById('weather-canvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
 let particles = [], animationFrameId = null, currentEffect = 'none';
@@ -240,6 +239,19 @@ async function fetchUVIndex(lat, lon) {
   } catch (err) { return 0; }
 }
 
+function updateCornerCityPhoto(cityName) {
+  const photoElem = document.getElementById('city-photo-corner');
+  if (!photoElem) return;
+
+  const imageUrl = `https://picsum.photos/seed/${encodeURIComponent(cityName)}/500/400`;
+  
+  const img = new Image();
+  img.src = imageUrl;
+  img.onload = () => {
+    photoElem.style.backgroundImage = `url('${imageUrl}')`;
+  };
+}
+
 function getUserLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -272,6 +284,8 @@ async function processWeatherData(data) {
   currentWeatherData = data;
   const uvIndex = await fetchUVIndex(data.coord.lat, data.coord.lon);
   
+  updateCornerCityPhoto(data.name);
+
   updateUI({
     city: data.name,
     temp: Math.round(data.main.temp),
