@@ -15,7 +15,7 @@ const i18n = {
     pressureUnit: "мм",
     conditions: {
       clear: "Ясно",
-      clouds: "Облачно",
+      overcast clouds: "Облачно",
       rain: "Дождь",
       drizzle: "Морось",
       thunderstorm: "Гроза",
@@ -49,7 +49,7 @@ const i18n = {
     pressureUnit: "mmHg",
     conditions: {
       clear: "Clear sky",
-      clouds: "Clouds",
+      overcast clouds: "Clouds",
       rain: "Rain",
       drizzle: "Drizzle",
       thunderstorm: "Thunderstorm",
@@ -83,7 +83,7 @@ const i18n = {
     pressureUnit: "mm Hg",
     conditions: {
       clear: "Ochiq havo",
-      clouds: "Bulutli",
+      overcast clouds: "Bulutli",
       rain: "Yomg'ir",
       drizzle: "Maydalab yog'adigan yomg'ir",
       thunderstorm: "Momaqaldiroq",
