@@ -151,7 +151,7 @@ body.theme-night {
   margin-bottom: 5px;
 }
 
-/* Рекомендации */
+/* Блок рекомендаций */
 .recommendations {
   margin-top: 25px;
   background: rgba(0, 0, 0, 0.25);
@@ -174,18 +174,50 @@ body.theme-night {
   gap: 12px;
 }
 
-.rec-card {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 12px 16px;
-  border-radius: 15px;
+/* Карточка совета */
+.rec-card, .advice-card, .info-card {
+  display: flex !important;
+  align-items: center !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  padding: 12px 16px !important;
+  border-radius: 15px !important;
+  gap: 0 !important;
 }
 
-.rec-icon {
-  font-size: 1.6rem;
+/* Жесткий квадрат под иконки любой ширины */
+.rec-icon, 
+.rec-card i, 
+.rec-card img, 
+.rec-card svg,
+.advice-card img, 
+.advice-card .icon,
+.info-card img,
+.info-card .icon {
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  margin-right: 15px !important;
+  
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+  font-size: 1.8rem !important;
   color: #ffd700;
+}
+
+.rec-card img, .advice-card img, .info-card img {
+  object-fit: contain !important;
+}
+
+/* Текстовый блок всегда начинается с одной линии */
+.rec-card > div,
+.advice-card > div,
+.info-card > div,
+.advice-card .text-content {
+  text-align: left !important;
+  flex: 1 !important;
 }
 
 .rec-card h4 {
@@ -196,51 +228,21 @@ body.theme-night {
   font-size: 0.85rem;
   opacity: 0.9;
 }
-/* 📐 СТРОГОЕ ВЫРАВНИВАНИЕ ПО ВЕРТИКАЛЬНОЙ ЛИНИИ*/
 
-/* Карточка-контейнер */
-.advice-card, .info-card {
-  display: flex !important;
-  align-items: center !important;
-  padding: 12px 16px !important;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  margin-bottom: 10px;
-}
-
-/* Оболочка для значка (создает жесткую "колонку" фиксированной ширины) */
-.advice-card img, 
-.advice-card .icon,
-.info-card img,
-.info-card .icon {
-  width: 40px !important;          /* Жесткая ширина колонки для ВСЕХ значков */
-  min-width: 40px !important;      /* Не дает сжиматься */
-  height: 40px !important;
-  margin-right: 15px !important;   /* Одинаковый отступ от черты до текста */
-  
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important; /* Центрирует иконку внутри своей колонки */
-  object-fit: contain !important;
-}
-
-/* Текстовый блок автоматически начинается от одной вертикальной линии */
-.advice-card .text-content,
-.advice-card div,
-.info-card div {
-  text-align: left !important;
-  flex: 1;
-}
-
-/* На мобильных телефонах */
+/* Настройки для мобильных устройств */
 @media (max-width: 768px) {
+  .rec-icon, 
+  .rec-card i, 
+  .rec-card img, 
+  .rec-card svg,
   .advice-card img, 
   .advice-card .icon,
   .info-card img,
   .info-card .icon {
-    width: 32px !important;
-    min-width: 32px !important;
-    height: 32px !important;
-    margin-right: 10px !important;
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    margin-right: 12px !important;
+    font-size: 1.5rem !important;
   }
 }
