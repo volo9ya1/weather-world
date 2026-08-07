@@ -4,12 +4,14 @@
 
 body {
   margin: 0;
-  padding: 0;
+  padding: 20px;
   min-height: 100vh;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   font-family: system-ui, -apple-system, sans-serif;
   color: #fff;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 canvas#weather-canvas {
@@ -22,7 +24,7 @@ canvas#weather-canvas {
   pointer-events: none;
 }
 
-/* Всплывающее окно LazyMedia */
+/* Модальное окно выбора режима */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -110,14 +112,13 @@ canvas#weather-canvas {
   color: #fff;
 }
 
-/* Верхняя панель */
+/* Верхняя панель на весь экран */
 .top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  max-width: 850px;
-  margin: 0 auto;
+  padding: 10px 0;
+  width: 100%;
 }
 
 .device-toggle-bar button {
@@ -148,13 +149,11 @@ canvas#weather-canvas {
   color: #000;
 }
 
-/* Поиск */
+/* Поиск на весь экран */
 .search-box {
   position: relative;
   width: 100%;
-  max-width: 450px;
-  margin: 0 auto 20px auto;
-  padding: 0 15px;
+  margin: 10px 0 20px 0;
 }
 
 #city-input {
@@ -171,7 +170,7 @@ canvas#weather-canvas {
 
 #search-btn {
   position: absolute;
-  right: 25px;
+  right: 15px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -181,15 +180,68 @@ canvas#weather-canvas {
   font-size: 18px;
 }
 
-/* Liquid Glass */
+/* Контейнеры на весь экран */
+.glass-container.mode-pc {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.glass-container.mode-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  flex-grow: 1;
+}
+
 .glass-card {
   background: rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 20px;
-  padding: 24px;
+  padding: 30px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Позиционирование фото города */
+.section-main {
+  position: relative;
+  overflow: hidden;
+}
+
+.section-main h1,
+.section-main p,
+.section-main h2 {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+#city-photo-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 220px;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 0 20px 0 20px;
+  opacity: 0.85;
+  z-index: 1;
+  pointer-events: none;
+  mask-image: linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%),
+              linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+  mask-composite: intersect;
+  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%),
+                      linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+  -webkit-mask-composite: source-in;
 }
 
 #city-name {
@@ -217,6 +269,8 @@ canvas#weather-canvas {
   align-items: center;
   gap: 10px;
   width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
 .weather-info-item {
@@ -251,6 +305,8 @@ canvas#weather-canvas {
   padding-top: 15px;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .bottom-label {
@@ -268,7 +324,7 @@ canvas#weather-canvas {
 
 .rec-block {
   background: rgba(255, 255, 255, 0.08);
-  padding: 15px;
+  padding: 18px;
   border-radius: 12px;
   margin-bottom: 15px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -287,25 +343,10 @@ canvas#weather-canvas {
   opacity: 0.9;
 }
 
-.glass-container.mode-pc {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 20px 20px 20px;
-}
-
-.glass-container.mode-mobile {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 0 15px 20px 15px;
-}
-
 @media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
   .top-bar {
     flex-direction: column;
     gap: 12px;
