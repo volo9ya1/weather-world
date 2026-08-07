@@ -1,7 +1,83 @@
-// ==========================================================================
-// 🔑 КОНФИГУРАЦИЯ API
-// ==========================================================================
 const API_KEY = "a768be6a11bebe3aa2e0be24666a1c02"; 
+let currentLang = localStorage.getItem('weather_app_lang') || 'ru';
+
+// 🌐 СЛОВАРЬ ПЕРЕВОДОВ (RU, EN, UZ)
+const i18n = {
+  ru: {
+    searchPlaceholder: "Введите город...",
+    humidityLabel: "Влажность",
+    windLabel: "Ветер",
+    pressureLabel: "Давление",
+    recTitle: "💡 Советы на сегодня",
+    clothesTitle: "Что надеть?",
+    walkTitle: "Идти ли гулять?",
+    windUnit: "м/с",
+    pressureUnit: "мм",
+    clothes: {
+      hot: "Легкая майка, шорты и кепка. Не забудьте воду!",
+      warm: "Футболка и легкая толстовка или джинсовка.",
+      cool: "Теплая куртка, худи и закрытая обувь.",
+      cold: "Зимний пуховик, шапка, шарф и перчатки!"
+    },
+    walk: {
+      rain: "На улице дождь. Лучше остаться дома с чаем или взять зонт ☔",
+      snow: "Отличное время для снежков и прогулки по парку ❄️",
+      extremeHot: "Слишком жарко. Держитесь в тени и пейте больше воды 🌅",
+      good: "Хорошая температура для прогулки или занятий спортом ☀️",
+      normal: "Прекрасная погода для прогулок на свежем воздухе! 🚶‍♂️"
+    }
+  },
+  en: {
+    searchPlaceholder: "Enter city...",
+    humidityLabel: "Humidity",
+    windLabel: "Wind",
+    pressureLabel: "Pressure",
+    recTitle: "💡 Today's Tips",
+    clothesTitle: "What to wear?",
+    walkTitle: "Go for a walk?",
+    windUnit: "m/s",
+    pressureUnit: "mmHg",
+    clothes: {
+      hot: "Light t-shirt, shorts, and a cap. Don't forget water!",
+      warm: "T-shirt and a light hoodie or denim jacket.",
+      cool: "Warm jacket, hoodie, and closed shoes.",
+      cold: "Winter coat, hat, scarf, and gloves!"
+    },
+    walk: {
+      rain: "It's raining. Better stay inside with tea or bring an umbrella ☔",
+      snow: "Great time for snowball fights and a park walk ❄️",
+      extremeHot: "Too hot. Stay in the shade and drink plenty of water 🌅",
+      good: "Great temperature for a walk or outdoor workout ☀️",
+      normal: "Wonderful weather for a walk outdoors! 🚶‍♂️"
+    }
+  },
+  uz: {
+    searchPlaceholder: "Shaharni kiriting...",
+    humidityLabel: "Namlik",
+    windLabel: "Shamol",
+    pressureLabel: "Bosim",
+    recTitle: "💡 Bugungi maslahatlar",
+    clothesTitle: "Nima kiyish kerak?",
+    walkTitle: "Sayrga chiqish kerakmi?",
+    windUnit: "m/s",
+    pressureUnit: "mm Hg",
+    clothes: {
+      hot: "Yengil futbolka, shorti va kepka. Suv olishni unutmang!",
+      warm: "Futbolka va yengil svetshot yoki djinsovka.",
+      cool: "Issiq kurtka, xudi va yopiq poyabzal.",
+      cold: "Qishki kurtka, qalpoq, sharf va qo'lqoplar!"
+    },
+    walk: {
+      rain: "Tashqarida yomg'ir yog'moqda. Soyabon oling yoki uyda qoling ☔",
+      snow: "Qor o'ynash va parkda sayr qilish uchun ajoyib vaqt ❄️",
+      extremeHot: "Juda issiq. Soyada bo'ling va ko'proq suv iching 🌅",
+      good: "Sayr qilish yoki sport bilan shug'ullanish uchun yaxshi havo ☀️",
+      normal: "Taza havoda sayr qilish uchun ajoyib ob-havo! 🚶‍♂️"
+    }
+  }
+};
+
+let currentWeatherData = null;
 
 // 🌧️ CANVAS ЭФФЕКТЫ
 const canvas = document.getElementById('weather-canvas');
@@ -132,55 +208,39 @@ function getUserLocation() {
 }
 
 async function fetchWeatherByCoords(lat, lon) {
-  if (!API_KEY) {
-    useMockData('Ташкент');
-    return;
-  }
-
   try {
-    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=ru&appid=${API_KEY}`);
-    if (!res.ok) throw new Error('Не удалось определить данные');
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=${currentLang}&appid=${API_KEY}`);
+    if (!res.ok) throw new Error('Error');
     const data = await res.json();
-
-    updateUI({
-      city: data.name,
-      temp: Math.round(data.main.temp),
-      humidity: data.main.humidity,
-      wind: data.wind.speed,
-      pressure: Math.round(data.main.pressure * 0.750063),
-      condition: data.weather[0].main.toLowerCase(),
-      description: data.weather[0].description,
-      isNight: isNightTime(data.sys.sunrise, data.sys.sunset)
-    });
+    processWeatherData(data);
   } catch (err) {
-    useMockData('Ташкент');
+    fetchWeather('Ташкент');
   }
 }
 
 async function fetchWeather(city) {
-  if (!API_KEY) {
-    useMockData(city);
-    return;
-  }
-
   try {
-    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&lang=ru&appid=${API_KEY}`);
-    if (!res.ok) throw new Error('Город не найден');
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&lang=${currentLang}&appid=${API_KEY}`);
+    if (!res.ok) throw new Error('City not found');
     const data = await res.json();
-
-    updateUI({
-      city: data.name,
-      temp: Math.round(data.main.temp),
-      humidity: data.main.humidity,
-      wind: data.wind.speed,
-      pressure: Math.round(data.main.pressure * 0.750063),
-      condition: data.weather[0].main.toLowerCase(),
-      description: data.weather[0].description,
-      isNight: isNightTime(data.sys.sunrise, data.sys.sunset)
-    });
+    processWeatherData(data);
   } catch (err) {
-    useMockData(city);
+    console.error(err);
   }
+}
+
+function processWeatherData(data) {
+  currentWeatherData = data;
+  updateUI({
+    city: data.name,
+    temp: Math.round(data.main.temp),
+    humidity: data.main.humidity,
+    wind: data.wind.speed,
+    pressure: Math.round(data.main.pressure * 0.750063),
+    condition: data.weather[0].main.toLowerCase(),
+    description: data.weather[0].description,
+    isNight: isNightTime(data.sys.sunrise, data.sys.sunset)
+  });
 }
 
 function isNightTime(sunrise, sunset) {
@@ -188,13 +248,28 @@ function isNightTime(sunrise, sunset) {
   return now < sunrise || now > sunset;
 }
 
+function updateStaticTranslations() {
+  const t = i18n[currentLang];
+  
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+
+  const searchInput = document.getElementById('city-input');
+  if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+}
+
 function updateUI(weather) {
+  updateStaticTranslations();
+
+  const t = i18n[currentLang];
   document.getElementById('city-name').textContent = weather.city;
   document.getElementById('temp-value').textContent = weather.temp > 0 ? `+${weather.temp}` : weather.temp;
   document.getElementById('weather-desc').textContent = weather.description;
   document.getElementById('humidity').textContent = `${weather.humidity}%`;
-  document.getElementById('wind-speed').textContent = `${weather.wind} м/с`;
-  document.getElementById('pressure').textContent = `${weather.pressure} мм`;
+  document.getElementById('wind-speed').textContent = `${weather.wind} ${t.windUnit}`;
+  document.getElementById('pressure').textContent = `${weather.pressure} ${t.pressureUnit}`;
 
   applyThemeAndEffects(weather.condition, weather.isNight);
   generateRecommendations(weather.temp, weather.condition);
@@ -203,7 +278,6 @@ function updateUI(weather) {
 function applyThemeAndEffects(condition, isNight) {
   document.body.className = '';
 
-  // Ночная тема применяется фоном, но эффекты выбираются по погоде
   if (isNight) {
     document.body.classList.add('theme-night');
     if (condition.includes('rain') || condition.includes('drizzle') || condition.includes('thunderstorm')) {
@@ -216,7 +290,6 @@ function applyThemeAndEffects(condition, isNight) {
     return;
   }
 
-  // Дневные темы
   if (condition.includes('rain') || condition.includes('drizzle') || condition.includes('thunderstorm')) {
     document.body.classList.add('theme-rainy');
     startWeatherAnimation('rain');
@@ -233,51 +306,52 @@ function applyThemeAndEffects(condition, isNight) {
 }
 
 function generateRecommendations(temp, condition) {
+  const t = i18n[currentLang];
   const clothesElem = document.getElementById('rec-clothes');
   const walkElem = document.getElementById('rec-walk');
 
-  // Одежда
   if (temp >= 25) {
-    clothesElem.textContent = "Легкая майка, шорты и кепка. Не забудьте воду!";
+    clothesElem.textContent = t.clothes.hot;
   } else if (temp >= 15) {
-    clothesElem.textContent = "Футболка и легкая толстовка или джинсовка.";
+    clothesElem.textContent = t.clothes.warm;
   } else if (temp >= 5) {
-    clothesElem.textContent = "Теплая куртка, худи и закрытая обувь.";
+    clothesElem.textContent = t.clothes.cool;
   } else {
-    clothesElem.textContent = "Зимний пуховик, шапка, шарф и перчатки!";
+    clothesElem.textContent = t.clothes.cold;
   }
 
-  // Прогулка (исправлена очередность условий)
   const isRainy = condition.includes('rain') || condition.includes('drizzle') || condition.includes('thunder');
   const isSnowy = condition.includes('snow');
 
   if (isRainy) {
-    walkElem.textContent = "На улице дождь. Лучше остаться дома с чаем или взять зонт ☔";
+    walkElem.textContent = t.walk.rain;
   } else if (isSnowy) {
-    walkElem.textContent = "Отличное время для снежков и прогулки по парку ❄️";
+    walkElem.textContent = t.walk.snow;
   } else if (temp >= 40) {
-    walkElem.textContent = "Слишком жарко. Держитесь в тени и пейте больше воды 🌅";
+    walkElem.textContent = t.walk.extremeHot;
   } else if (temp >= 22) {
-    walkElem.textContent = "Хорошая температура для прогулки или занятий спортом ☀️";
+    walkElem.textContent = t.walk.good;
   } else {
-    walkElem.textContent = "Прекрасная погода для прогулок на свежем воздухе! 🚶‍♂️";
+    walkElem.textContent = t.walk.normal;
   }
 }
 
-function useMockData(cityName) {
-  const mocks = {
-    'дождь': { city: 'Лондон', temp: 14, humidity: 88, wind: 6.5, pressure: 748, condition: 'rain', description: 'Небольшой дождь', isNight: false },
-    'снег': { city: 'Москва', temp: -5, humidity: 90, wind: 3.1, pressure: 755, condition: 'snow', description: 'Снегопад', isNight: false },
-    'ночь': { city: 'Токио', temp: 18, humidity: 60, wind: 2.0, pressure: 760, condition: 'clear', description: 'Ясная ночь', isNight: true },
-    'default': { city: cityName || 'Ташкент', temp: 28, humidity: 32, wind: 4.0, pressure: 752, condition: 'clouds', description: 'Облачно', isNight: true }
-  };
+// События переключения языка
+const langSelect = document.getElementById('lang-select');
+langSelect.value = currentLang;
 
-  const key = cityName ? cityName.toLowerCase() : 'default';
-  const data = mocks[key] || mocks['default'];
-  updateUI(data);
-}
+langSelect.addEventListener('change', (e) => {
+  currentLang = e.target.value;
+  localStorage.setItem('weather_app_lang', currentLang);
+  
+  if (currentWeatherData) {
+    fetchWeather(currentWeatherData.name);
+  } else {
+    getUserLocation();
+  }
+});
 
-// Обработчики событий
+// Поиск
 document.getElementById('search-btn').addEventListener('click', () => {
   const city = document.getElementById('city-input').value.trim();
   if (city) fetchWeather(city);
