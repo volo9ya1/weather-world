@@ -196,3 +196,47 @@ body.theme-night {
   font-size: 0.85rem;
   opacity: 0.9;
 }
+/* ==========================================================================
+   🛠️ ИСПРАВЛЕНИЕ ВЫРАВНИВАНИЯ КАРТОЧЕК И ИКОНОК (ПК + ТЕЛЕФОН)
+   ========================================================================== */
+
+/* Выравнивание внутренних карточек советов и инфо-блоков */
+.advice-card, .info-card {
+  display: flex !important;
+  align-items: center !important; /* Выравнивание иконки и текста по центру */
+  gap: 15px !important;           /* Фиксированное расстояние между иконкой и текстом */
+  padding: 15px !important;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  text-align: left !important;
+  margin-bottom: 10px;
+}
+
+/* Настройка иконки, чтобы её не сжимало */
+.advice-card img, 
+.advice-card .icon,
+.info-card img,
+.info-card .icon {
+  width: 36px !important;
+  height: 36px !important;
+  flex-shrink: 0 !important;      /* Не дает иконке плющиться */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Адаптация под телефоны */
+@media (max-width: 768px) {
+  .advice-card, .info-card {
+    padding: 10px 12px !important;
+    gap: 10px !important;
+  }
+
+  .advice-card img, 
+  .advice-card .icon,
+  .info-card img,
+  .info-card .icon {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
