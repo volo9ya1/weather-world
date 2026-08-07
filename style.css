@@ -57,6 +57,36 @@ body.theme-night {
   padding: 20px;
 }
 
+/* Переключатель языка */
+.lang-switcher {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.lang-switcher select {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  color: #fff;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.lang-switcher select:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.lang-switcher select option {
+  background: #1e293b;
+  color: #fff;
+}
+
 /* Поиск */
 .search-box {
   display: flex;
@@ -151,7 +181,7 @@ body.theme-night {
   margin-bottom: 5px;
 }
 
-/* Блок рекомендаций */
+/* Рекомендации */
 .recommendations {
   margin-top: 25px;
   background: rgba(0, 0, 0, 0.25);
@@ -174,7 +204,7 @@ body.theme-night {
   gap: 12px;
 }
 
-/* Карточка совета */
+/* Карточки советов с жесткой сеткой по вертикали */
 .rec-card, .advice-card, .info-card {
   display: flex !important;
   align-items: center !important;
@@ -184,7 +214,6 @@ body.theme-night {
   gap: 0 !important;
 }
 
-/* Жесткий квадрат под иконки любой ширины */
 .rec-icon, 
 .rec-card i, 
 .rec-card img, 
@@ -211,7 +240,6 @@ body.theme-night {
   object-fit: contain !important;
 }
 
-/* Текстовый блок всегда начинается с одной линии */
 .rec-card > div,
 .advice-card > div,
 .info-card > div,
@@ -229,7 +257,6 @@ body.theme-night {
   opacity: 0.9;
 }
 
-/* Настройки для мобильных устройств */
 @media (max-width: 768px) {
   .rec-icon, 
   .rec-card i, 
