@@ -6,6 +6,7 @@ body {
   margin: 0;
   padding: 20px;
   min-height: 100vh;
+  width: 100vw;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   font-family: system-ui, -apple-system, sans-serif;
   color: #fff;
@@ -18,21 +19,22 @@ canvas#weather-canvas {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   z-index: -1;
   pointer-events: none;
 }
 
-/* Модальное окно выбора режима */
+/* Модальное окно режима */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(15, 32, 39, 0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(15, 32, 39, 0.92);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   z-index: 9999;
   display: flex;
   justify-content: center;
@@ -44,13 +46,12 @@ canvas#weather-canvas {
   max-width: 650px;
   width: 100%;
   text-align: center;
-  padding: 30px 20px;
 }
 
 .modal-content h2 {
   margin-top: 0;
   margin-bottom: 25px;
-  font-size: 20px;
+  font-size: 22px;
   letter-spacing: 1px;
 }
 
@@ -61,12 +62,12 @@ canvas#weather-canvas {
 }
 
 .option-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  padding: 20px 15px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  padding: 25px 20px;
   cursor: pointer;
-  transition: transform 0.2s, background 0.2s;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -75,23 +76,24 @@ canvas#weather-canvas {
 
 .option-card:hover {
   transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.15);
   border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .option-icon {
   font-size: 48px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .option-card h3 {
-  font-size: 15px;
+  font-size: 16px;
   margin: 10px 0;
 }
 
 .option-card p {
-  font-size: 12px;
-  opacity: 0.7;
+  font-size: 13px;
+  opacity: 0.75;
   line-height: 1.4;
   margin-bottom: 20px;
 }
@@ -101,10 +103,11 @@ canvas#weather-canvas {
   border: 2px solid #4CAF50;
   color: #4CAF50;
   font-weight: bold;
-  padding: 8px 18px;
-  border-radius: 8px;
+  padding: 10px 22px;
+  border-radius: 10px;
   cursor: pointer;
   text-transform: uppercase;
+  transition: all 0.2s ease;
 }
 
 .option-card:hover .modal-btn {
@@ -112,7 +115,7 @@ canvas#weather-canvas {
   color: #fff;
 }
 
-/* Верхняя панель на весь экран */
+/* Верхняя панель */
 .top-bar {
   display: flex;
   justify-content: space-between;
@@ -121,35 +124,27 @@ canvas#weather-canvas {
   width: 100%;
 }
 
-.device-toggle-bar button {
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-}
-
-.device-toggle-bar button.active {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: #fff;
+.brand-logo {
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
 }
 
 #lang-select {
-  padding: 8px;
-  border-radius: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.2);
   outline: none;
+  cursor: pointer;
 }
 
 #lang-select option {
   color: #000;
 }
 
-/* Поиск на весь экран */
+/* Поиск */
 .search-box {
   position: relative;
   width: 100%;
@@ -158,7 +153,7 @@ canvas#weather-canvas {
 
 #city-input {
   width: 100%;
-  padding: 12px 45px 12px 18px;
+  padding: 14px 45px 14px 18px;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.1);
@@ -180,7 +175,7 @@ canvas#weather-canvas {
   font-size: 18px;
 }
 
-/* Контейнеры на весь экран */
+/* Контейнеры режимов отображения */
 .glass-container.mode-pc {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -210,7 +205,6 @@ canvas#weather-canvas {
   justify-content: space-between;
 }
 
-/* Позиционирование фото города */
 .section-main {
   position: relative;
   overflow: hidden;
@@ -228,8 +222,8 @@ canvas#weather-canvas {
   position: absolute;
   top: 0;
   right: 0;
-  width: 220px;
-  height: 200px;
+  width: 240px;
+  height: 220px;
   background-size: cover;
   background-position: center;
   border-radius: 0 20px 0 20px;
@@ -262,42 +256,64 @@ canvas#weather-canvas {
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
+/* Кнопки-карточки без синевы */
 .weather-details {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   width: 100%;
   position: relative;
   z-index: 2;
 }
 
 .weather-info-item {
-  background: transparent;
-  border: none;
-  padding: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 15px 10px;
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.weather-info-item:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.weather-info-item:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .weather-info-item .icon {
-  font-size: 22px;
-  margin-bottom: 6px;
+  font-size: 24px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
 .weather-info-item span {
   font-size: 12px;
-  opacity: 0.8;
-  margin-bottom: 4px;
+  opacity: 0.85;
+  margin-bottom: 6px;
+  font-weight: 500;
 }
 
 .weather-info-item strong {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .bottom-city-block {
@@ -347,11 +363,11 @@ canvas#weather-canvas {
   body {
     padding: 10px;
   }
-  .top-bar {
-    flex-direction: column;
-    gap: 12px;
-  }
   .modal-options {
     grid-template-columns: 1fr;
+  }
+  .weather-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 }
