@@ -196,47 +196,51 @@ body.theme-night {
   font-size: 0.85rem;
   opacity: 0.9;
 }
-/* ==========================================================================
-   🛠️ ИСПРАВЛЕНИЕ ВЫРАВНИВАНИЯ КАРТОЧЕК И ИКОНОК (ПК + ТЕЛЕФОН)
-   ========================================================================== */
+/* 📐 СТРОГОЕ ВЫРАВНИВАНИЕ ПО ВЕРТИКАЛЬНОЙ ЛИНИИ*/
 
-/* Выравнивание внутренних карточек советов и инфо-блоков */
+/* Карточка-контейнер */
 .advice-card, .info-card {
   display: flex !important;
-  align-items: center !important; /* Выравнивание иконки и текста по центру */
-  gap: 15px !important;           /* Фиксированное расстояние между иконкой и текстом */
-  padding: 15px !important;
+  align-items: center !important;
+  padding: 12px 16px !important;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  text-align: left !important;
   margin-bottom: 10px;
 }
 
-/* Настройка иконки, чтобы её не сжимало */
+/* Оболочка для значка (создает жесткую "колонку" фиксированной ширины) */
 .advice-card img, 
 .advice-card .icon,
 .info-card img,
 .info-card .icon {
-  width: 36px !important;
-  height: 36px !important;
-  flex-shrink: 0 !important;      /* Не дает иконке плющиться */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 40px !important;          /* Жесткая ширина колонки для ВСЕХ значков */
+  min-width: 40px !important;      /* Не дает сжиматься */
+  height: 40px !important;
+  margin-right: 15px !important;   /* Одинаковый отступ от черты до текста */
+  
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important; /* Центрирует иконку внутри своей колонки */
+  object-fit: contain !important;
 }
 
-/* Адаптация под телефоны */
-@media (max-width: 768px) {
-  .advice-card, .info-card {
-    padding: 10px 12px !important;
-    gap: 10px !important;
-  }
+/* Текстовый блок автоматически начинается от одной вертикальной линии */
+.advice-card .text-content,
+.advice-card div,
+.info-card div {
+  text-align: left !important;
+  flex: 1;
+}
 
+/* На мобильных телефонах */
+@media (max-width: 768px) {
   .advice-card img, 
   .advice-card .icon,
   .info-card img,
   .info-card .icon {
-    width: 28px !important;
-    height: 28px !important;
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    margin-right: 10px !important;
   }
 }
