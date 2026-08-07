@@ -3,69 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather World — Атмосферная Погода</title>
+  <title>Weather World</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="theme-sunny">
+<body>
 
   <canvas id="weather-canvas"></canvas>
 
   <div class="app-container">
-    <header class="search-box">
-      <input type="text" id="city-input" placeholder="Введите город (например, Ташкент)..." />
-      <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-    </header>
+    <!-- Переключатель языка -->
+    <div class="lang-switcher">
+      <select id="lang-select">
+        <option value="ru">RU 🇷🇺</option>
+        <option value="en">EN 🇬🇧</option>
+        <option value="uz">UZ 🇺🇿</option>
+      </select>
+    </div>
 
-    <main class="weather-card">
+    <!-- Поиск -->
+    <div class="search-box">
+      <input type="text" id="city-input" placeholder="Введите город..." data-i18n-placeholder="searchPlaceholder">
+      <button id="search-btn"><i class="fas fa-search"></i></button>
+    </div>
+
+    <!-- Карточка погоды -->
+    <div class="weather-card">
       <div class="weather-header">
-        <h1 id="city-name">Загрузка...</h1>
-        <p id="weather-desc">Определяем погоду</p>
+        <h1 id="city-name">Ташкент</h1>
+        <p id="weather-desc">Загрузка...</p>
       </div>
-
       <div class="temperature-box">
-        <span id="temp-value">--</span><span class="deg">°C</span>
+        <span id="temp-value">+25</span><span class="deg">°C</span>
       </div>
-
       <div class="weather-details">
         <div class="detail-item">
-          <i class="fa-solid fa-droplet"></i>
-          <span>Влажность</span>
+          <i class="fas fa-tint"></i>
+          <span data-i18n="humidityLabel">Влажность</span>
           <strong id="humidity">--%</strong>
         </div>
         <div class="detail-item">
-          <i class="fa-solid fa-wind"></i>
-          <span>Ветер</span>
+          <i class="fas fa-wind"></i>
+          <span data-i18n="windLabel">Ветер</span>
           <strong id="wind-speed">-- м/с</strong>
         </div>
         <div class="detail-item">
-          <i class="fa-solid fa-gauge-high"></i>
-          <span>Давление</span>
+          <i class="fas fa-compress-arrows-alt"></i>
+          <span data-i18n="pressureLabel">Давление</span>
           <strong id="pressure">-- мм</strong>
         </div>
       </div>
-    </main>
+    </div>
 
-    <section class="recommendations">
-      <h2><i class="fa-solid fa-lightbulb"></i> Советы на сегодня</h2>
+    <!-- Рекомендации -->
+    <div class="recommendations">
+      <h2 data-i18n="recTitle">💡 Советы на сегодня</h2>
       <div class="rec-grid">
         <div class="rec-card">
-          <i class="fa-solid fa-shirt rec-icon" id="icon-clothes"></i>
+          <div class="rec-icon">👕</div>
           <div>
-            <h4>Что надеть?</h4>
-            <p id="rec-clothes">Анализ температуры...</p>
+            <h4 data-i18n="clothesTitle">Что надеть?</h4>
+            <p id="rec-clothes">Загрузка...</p>
           </div>
         </div>
-
         <div class="rec-card">
-          <i class="fa-solid fa-person-walking rec-icon" id="icon-walk"></i>
+          <div class="rec-icon">🚶‍♂️</div>
           <div>
-            <h4>Идти ли гулять?</h4>
-            <p id="rec-walk">Анализ условий...</p>
+            <h4 data-i18n="walkTitle">Идти ли гулять?</h4>
+            <p id="rec-walk">Загрузка...</p>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 
   <script src="script.js"></script>
