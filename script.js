@@ -3,28 +3,31 @@ let currentLang = localStorage.getItem('weather_app_lang') || 'ru';
 
 const i18n = {
   ru: {
+    modalTitle: "ВЫБЕРИТЕ РЕЖИМ ИНТЕРФЕЙСА:",
+    modalMobileTitle: "СМАРТФОН / ПЛАНШЕТ",
+    modalMobileDesc: "Выберите этот режим, если хотите использовать сенсорный экран для управления",
+    modalMobileBtn: "СЕНСОРНЫЙ",
+    modalPcTitle: "ПК / TV BOX",
+    modalPcDesc: "Выберите этот режим для работы на широком экране с клавиатурой и мышью",
+    modalPcBtn: "ПК РЕЖИМ",
     searchPlaceholder: "Введите город...",
     humidityLabel: "Влажность",
     windLabel: "Ветер",
     pressureLabel: "Давление",
     uvLabel: "УФ-индекс",
+    selectedCityLabel: "Выбранный город:",
     recTitle: "💡 Советы на сегодня",
     clothesTitle: "Что надеть?",
     walkTitle: "Идти ли гулять?",
     windUnit: "м/с",
     pressureUnit: "мм",
     conditions: {
-      clear: "Ясно", 
-      clouds: "Облачно", "overcast clouds": "Пасмурно",
+      "clear": "Ясно", "clouds": "Облачно", "overcast clouds": "Пасмурно",
       "few clouds": "Малооблачно", "scattered clouds": "Переменная облачность",
-      "broken clouds": "Облачно с прояснениями", 
-      rain: "Дождь",
+      "broken clouds": "Облачно с прояснениями", "rain": "Дождь",
       "light rain": "Небольшой дождь", "moderate rain": "Умеренный дождь",
-      drizzle: "Морось",
-      thunderstorm: "Гроза", 
-      snow: "Снег",
-      mist: "Туман", 
-      fog: "Густой туман"
+      "drizzle": "Морось", "thunderstorm": "Гроза", "snow": "Снег",
+      "mist": "Туман", "fog": "Густой туман"
     },
     clothes: {
       hot: "Легкая майка, шорты и кепка. Не забудьте воду!",
@@ -41,27 +44,24 @@ const i18n = {
     }
   },
   en: {
-    searchPlaceholder: "Enter city...", 
-    humidityLabel: "Humidity",
-    windLabel: "Wind", 
-    pressureLabel: "Pressure", 
-    uvLabel: "UV Index",
-    recTitle: "💡 Today's Tips", 
-    clothesTitle: "What to wear?", 
-    walkTitle: "Go for a walk?",
-    windUnit: "m/s", 
-    pressureUnit: "mmHg",
+    modalTitle: "SELECT INTERFACE MODE:",
+    modalMobileTitle: "SMARTPHONE / TABLET",
+    modalMobileDesc: "Select this mode if you want to use touchscreen controls",
+    modalMobileBtn: "TOUCH",
+    modalPcTitle: "PC / TV BOX",
+    modalPcDesc: "Select this mode for wide screens using keyboard and mouse",
+    modalPcBtn: "PC MODE",
+    searchPlaceholder: "Enter city...",
+    humidityLabel: "Humidity", windLabel: "Wind", pressureLabel: "Pressure",
+    uvLabel: "UV Index", selectedCityLabel: "Selected city:",
+    recTitle: "💡 Today's Tips", clothesTitle: "What to wear?", walkTitle: "Go for a walk?",
+    windUnit: "m/s", pressureUnit: "mmHg",
     conditions: {
-      clear: "Clear sky", 
-      clouds: "Clouds", "overcast clouds": "Overcast clouds",
+      "clear": "Clear sky", "clouds": "Clouds", "overcast clouds": "Overcast clouds",
       "few clouds": "Few clouds", "scattered clouds": "Scattered clouds",
-      "broken clouds": "Broken clouds", 
-      rain: "Rain", "light rain": "Light rain","moderate rain": "Moderate rain", 
-      drizzle: "Drizzle", 
-      thunderstorm: "Thunderstorm",
-      snow: "Snow", 
-      mist: "Mist", 
-      fog: "Fog"
+      "broken clouds": "Broken clouds", "rain": "Rain", "light rain": "Light rain",
+      "moderate rain": "Moderate rain", "drizzle": "Drizzle", "thunderstorm": "Thunderstorm",
+      "snow": "Snow", "mist": "Mist", "fog": "Fog"
     },
     clothes: {
       hot: "Light t-shirt, shorts, and a cap. Don't forget water!",
@@ -78,25 +78,24 @@ const i18n = {
     }
   },
   uz: {
-    searchPlaceholder: "Shaharni kiriting...", 
-    humidityLabel: "Namlik",
-    windLabel: "Shamol", 
-    pressureLabel: "Bosim",
-    uvLabel: "UV Indeksi",
-    recTitle: "💡 Bugungi maslahatlar", 
-    clothesTitle: "Nima kiyish kerak?", 
-    walkTitle: "Sayrga chiqish kerakmi?",
-    windUnit: "m/s", 
-    pressureUnit: "mm Hg",
+    modalTitle: "INTERFEYS REJIMINI TANLANG:",
+    modalMobileTitle: "SMARTFON / PLANSHET",
+    modalMobileDesc: "Sensor ekrandan foydalanish uchun ushbu rejimni tanlang",
+    modalMobileBtn: "SENSOR",
+    modalPcTitle: "PK / TV BOX",
+    modalPcDesc: "Katta ekran, klaviatura va sichqoncha uchun ushbu rejimni tanlang",
+    modalPcBtn: "PK REJIM",
+    searchPlaceholder: "Shaharni kiriting...",
+    humidityLabel: "Namlik", windLabel: "Shamol", pressureLabel: "Bosim",
+    uvLabel: "UV Indeksi", selectedCityLabel: "Tanlangan shahar:",
+    recTitle: "💡 Bugungi maslahatlar", clothesTitle: "Nima kiyish kerak?", walkTitle: "Sayrga chiqish kerakmi?",
+    windUnit: "m/s", pressureUnit: "mm Hg",
     conditions: {
-      clear: "Ochiq havo", 
-      clouds: "Bulutli", "overcast clouds": "Juda bulutli", "few clouds": "Biroz bulutli", "scattered clouds": "O'rtacha bulutli", "broken clouds": "Qisman bulutli", 
-      rain: "Yomg'ir", "light rain": "Yengil yomg'ir","moderate rain": "O'rtacha yomg'ir", 
-      drizzle: "Maydalab yog'adigan yomg'ir",
-      thunderstorm: "Momaqaldiroq", 
-      snow: "Qor", 
-      mist: "Tuman", 
-      fog: "Qalin tuman"
+      "clear": "Ochiq havo", "clouds": "Bulutli", "overcast clouds": "Juda bulutli",
+      "few clouds": "Biroz bulutli", "scattered clouds": "O'rtacha bulutli",
+      "broken clouds": "Qisman bulutli", "rain": "Yomg'ir", "light rain": "Yengil yomg'ir",
+      "moderate rain": "O'rtacha yomg'ir", "drizzle": "Maydalab yog'adigan yomg'ir",
+      "thunderstorm": "Momaqaldiroq", "snow": "Qor", "mist": "Tuman", "fog": "Qalin tuman"
     },
     clothes: {
       hot: "Yengil futbolka, shorti va kepka. Suv olishni unutmang!",
@@ -116,9 +115,6 @@ const i18n = {
 
 let currentWeatherData = null;
 
-// ==========================================
-// ЛОГИКА ПЕРЕКЛЮЧЕНИЯ РЕЖИМОВ (ПК / МОБ)
-// ==========================================
 function setDeviceMode(mode) {
   const container = document.getElementById('app-container');
   const btnPc = document.getElementById('btn-pc');
@@ -136,14 +132,22 @@ function setDeviceMode(mode) {
   localStorage.setItem('user_device_mode', mode);
 }
 
+function selectMode(mode) {
+  setDeviceMode(mode);
+  document.getElementById('mode-modal').style.display = 'none';
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const savedMode = localStorage.getItem('user_device_mode');
-  setDeviceMode(savedMode ? savedMode : (window.innerWidth <= 768 ? 'mobile' : 'pc'));
+  if (!savedMode) {
+    document.getElementById('mode-modal').style.display = 'flex';
+  } else {
+    document.getElementById('mode-modal').style.display = 'none';
+    setDeviceMode(savedMode);
+  }
 });
 
-// ==========================================
-// АНИМАЦИЯ CANVAS
-// ==========================================
+// Canvas Анимации
 const canvas = document.getElementById('weather-canvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
 let particles = [], animationFrameId = null, currentEffect = 'none';
@@ -224,18 +228,13 @@ function startWeatherAnimation(effectType) {
   if (effectType !== 'none') animate();
 }
 
-// ==========================================
-// API ПОГОДЫ И УФ-ИНДЕКСА
-// ==========================================
 async function fetchUVIndex(lat, lon) {
   try {
     const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=uv_index`);
     if (!res.ok) return 0;
     const data = await res.json();
     return Math.round(data.current.uv_index || 0);
-  } catch (err) {
-    return 0;
-  }
+  } catch (err) { return 0; }
 }
 
 function getUserLocation() {
@@ -301,6 +300,7 @@ function updateUI(weather) {
                          (t.conditions && t.conditions[weather.condition]) || weather.description;
 
   document.getElementById('city-name').textContent = weather.city;
+  document.getElementById('bottom-city-name').textContent = weather.city;
   document.getElementById('temp-value').textContent = weather.temp > 0 ? `+${weather.temp}°C` : `${weather.temp}°C`;
   document.getElementById('weather-desc').textContent = translatedDesc;
   document.getElementById('humidity').textContent = `${weather.humidity}%`;
@@ -341,9 +341,6 @@ function updateUI(weather) {
   }
 }
 
-// ==========================================
-// СОБЫТИЯ
-// ==========================================
 document.getElementById('lang-select').value = currentLang;
 document.getElementById('lang-select').addEventListener('change', (e) => {
   currentLang = e.target.value;
