@@ -10,6 +10,29 @@
 <body>
   <canvas id="weather-canvas"></canvas>
 
+  <!-- Стартовое окно выбора режима (LazyMedia style) -->
+  <div id="mode-modal" class="modal-overlay">
+    <div class="modal-content glass-card">
+      <h2 data-i18n="modalTitle">ВЫБЕРИТЕ РЕЖИМ ИНТЕРФЕЙСА:</h2>
+      
+      <div class="modal-options">
+        <div class="option-card" onclick="selectMode('mobile')">
+          <div class="option-icon">📱</div>
+          <h3 data-i18n="modalMobileTitle">СМАРТФОН / ПЛАНШЕТ</h3>
+          <p data-i18n="modalMobileDesc">Выберите этот режим, если хотите использовать сенсорный экран для управления</p>
+          <button class="modal-btn" data-i18n="modalMobileBtn">СЕНСОРНЫЙ</button>
+        </div>
+
+        <div class="option-card" onclick="selectMode('pc')">
+          <div class="option-icon">💻</div>
+          <h3 data-i18n="modalPcTitle">ПК / TV BOX</h3>
+          <p data-i18n="modalPcDesc">Выберите этот режим для работы на широком экране с клавиатурой и мышью</p>
+          <button class="modal-btn" data-i18n="modalPcBtn">ПК РЕЖИМ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="top-bar">
     <div class="device-toggle-bar">
       <button id="btn-pc" onclick="setDeviceMode('pc')">💻 ПК</button>
@@ -31,14 +54,12 @@
   </div>
 
   <div id="app-container" class="glass-container mode-pc">
-    
     <!-- Левый блок погоды -->
     <section class="glass-card section-main">
       <h1 id="city-name">Загрузка...</h1>
       <p id="weather-desc">...</p>
       <h2 id="temp-value">--</h2>
       
-      <!-- Горизонтальная линия и компактные параметры как на фото 2 -->
       <div class="weather-details">
         <div class="weather-info-item">
           <span class="icon">💧</span>
@@ -62,7 +83,6 @@
         </div>
       </div>
 
-      <!-- Отображение выбранного города внизу карточки -->
       <div class="bottom-city-block">
         <span class="bottom-label" data-i18n="selectedCityLabel">Выбранный город:</span>
         <h3 id="bottom-city-name">--</h3>
@@ -83,7 +103,6 @@
         <p id="rec-walk">Загрузка...</p>
       </div>
     </section>
-
   </div>
 
   <script src="script.js"></script>
