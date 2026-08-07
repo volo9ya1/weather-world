@@ -3,78 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather World</title>
+  <title>Погода</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
+  <!-- Canvas для анимации (дождь, снег, звезды) -->
   <canvas id="weather-canvas"></canvas>
 
-  <div class="app-container">
-    <!-- Переключатель языка -->
-    <div class="lang-switcher">
-      <select id="lang-select">
-        <option value="ru">RU 🇷🇺</option>
-        <option value="en">EN 🇬🇧</option>
-        <option value="uz">UZ 🇺🇿</option>
-      </select>
+  <div class="top-bar">
+    <div class="device-toggle-bar">
+      <button id="btn-pc" onclick="setDeviceMode('pc')">💻 ПК</button>
+      <button id="btn-mobile" onclick="setDeviceMode('mobile')">📱 Мобильный</button>
     </div>
+    
+    <select id="lang-select">
+      <option value="ru">RU 🇷🇺</option>
+      <option value="en">EN 🇬🇧</option>
+      <option value="uz">UZ 🇺🇿</option>
+    </select>
+  </div>
 
-    <!-- Поиск -->
-    <div class="search-box">
-      <input type="text" id="city-input" placeholder="Введите город..." data-i18n-placeholder="searchPlaceholder">
-      <button id="search-btn"><i class="fas fa-search"></i></button>
-    </div>
+  <div class="search-box">
+    <input type="text" id="city-input" placeholder="Введите город...">
+    <button id="search-btn">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+  </div>
 
-    <!-- Карточка погоды -->
-    <div class="weather-card">
-      <div class="weather-header">
-        <h1 id="city-name">Ташкент</h1>
-        <p id="weather-desc">Загрузка...</p>
-      </div>
-      <div class="temperature-box">
-        <span id="temp-value">+25</span><span class="deg">°C</span>
-      </div>
+  <!-- Главный контейнер -->
+  <div id="app-container" class="glass-container mode-pc">
+    
+    <!-- Раздел 1: Основная погода -->
+    <section class="glass-card section-main">
+      <h1 id="city-name">Загрузка...</h1>
+      <p id="weather-desc">...</p>
+      <h2 id="temp-value">--</h2>
+      
       <div class="weather-details">
-        <div class="detail-item">
-          <i class="fas fa-tint"></i>
+        <div class="weather-info-item">
+          <span class="icon">💧</span>
           <span data-i18n="humidityLabel">Влажность</span>
-          <strong id="humidity">--%</strong>
+          <strong id="humidity">--</strong>
         </div>
-        <div class="detail-item">
-          <i class="fas fa-wind"></i>
+        <div class="weather-info-item">
+          <span class="icon">💨</span>
           <span data-i18n="windLabel">Ветер</span>
-          <strong id="wind-speed">-- м/с</strong>
+          <strong id="wind-speed">--</strong>
         </div>
-        <div class="detail-item">
-          <i class="fas fa-compress-arrows-alt"></i>
+        <div class="weather-info-item">
+          <span class="icon">⏱️</span>
           <span data-i18n="pressureLabel">Давление</span>
-          <strong id="pressure">-- мм</strong>
+          <strong id="pressure">--</strong>
+        </div>
+        <div class="weather-info-item">
+          <span class="icon">☀️</span>
+          <span data-i18n="uvLabel">УФ-индекс</span>
+          <strong id="uv-index">--</strong>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Рекомендации -->
-    <div class="recommendations">
+    <!-- Раздел 2: Рекомендации -->
+    <section class="glass-card section-details">
       <h2 data-i18n="recTitle">💡 Советы на сегодня</h2>
-      <div class="rec-grid">
-        <div class="rec-card">
-          <div class="rec-icon">👕</div>
-          <div>
-            <h4 data-i18n="clothesTitle">Что надеть?</h4>
-            <p id="rec-clothes">Загрузка...</p>
-          </div>
-        </div>
-        <div class="rec-card">
-          <div class="rec-icon">🚶‍♂️</div>
-          <div>
-            <h4 data-i18n="walkTitle">Идти ли гулять?</h4>
-            <p id="rec-walk">Загрузка...</p>
-          </div>
-        </div>
+      
+      <div class="rec-block">
+        <h3 data-i18n="clothesTitle">Что надеть?</h3>
+        <p id="rec-clothes">Загрузка...</p>
       </div>
-    </div>
+
+      <div class="rec-block">
+        <h3 data-i18n="walkTitle">Идти ли гулять?</h3>
+        <p id="rec-walk">Загрузка...</p>
+      </div>
+    </section>
+
   </div>
 
   <script src="script.js"></script>
