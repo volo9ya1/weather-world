@@ -134,7 +134,10 @@ function setDeviceMode(mode) {
 
 function selectMode(mode) {
   setDeviceMode(mode);
-  document.getElementById('mode-modal').style.display = 'none';
+  const modal = document.getElementById('mode-modal');
+  if (modal) {
+    modal.style.setProperty('display', 'none', 'important');
+  }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
