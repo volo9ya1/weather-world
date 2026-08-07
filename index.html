@@ -10,8 +10,9 @@
 <body>
   <canvas id="weather-canvas"></canvas>
 
+  <!-- Модальное окно выбора режима -->
   <div id="mode-modal" class="modal-overlay">
-    <div class="modal-content glass-card">
+    <div class="modal-content">
       <h2 data-i18n="modalTitle">ВЫБЕРИТЕ РЕЖИМ ИНТЕРФЕЙСА:</h2>
       
       <div class="modal-options">
@@ -19,25 +20,21 @@
           <div class="option-icon">📱</div>
           <h3 data-i18n="modalMobileTitle">СМАРТФОН / ПЛАНШЕТ</h3>
           <p data-i18n="modalMobileDesc">Выберите этот режим, если хотите использовать сенсорный экран для управления</p>
-          <button type="button" class="modal-btn" onclick="selectMode('mobile'); event.stopPropagation();" data-i18n="modalMobileBtn">СЕНСОРНЫЙ</button>
+          <button type="button" class="modal-btn" data-i18n="modalMobileBtn">СЕНСОРНЫЙ</button>
         </div>
 
         <div class="option-card" onclick="selectMode('pc')">
-          <div class="option-icon">💻</div>
+          <div class="option-icon">🖥️</div>
           <h3 data-i18n="modalPcTitle">ПК / TV BOX</h3>
           <p data-i18n="modalPcDesc">Выберите этот режим для работы на широком экране с клавиатурой и мышью</p>
-          <button type="button" class="modal-btn" onclick="selectMode('pc'); event.stopPropagation();" data-i18n="modalPcBtn">ПК РЕЖИМ</button>
+          <button type="button" class="modal-btn" data-i18n="modalPcBtn">ПК РЕЖИМ</button>
         </div>
       </div>
     </div>
   </div>
 
   <div class="top-bar">
-    <div class="device-toggle-bar">
-      <button id="btn-pc" onclick="setDeviceMode('pc')">💻 ПК</button>
-      <button id="btn-mobile" onclick="setDeviceMode('mobile')">📱 Мобильный</button>
-    </div>
-    
+    <div class="brand-logo">☀️ Weather App</div>
     <select id="lang-select">
       <option value="ru">RU 🇷🇺</option>
       <option value="en">EN 🇬🇧</option>
