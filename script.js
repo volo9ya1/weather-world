@@ -150,6 +150,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Анимационный холст (Canvas)
 const canvas = document.getElementById('weather-canvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
 let particles = [], animationFrameId = null, currentEffect = 'none';
@@ -230,55 +231,29 @@ function startWeatherAnimation(effectType) {
   if (effectType !== 'none') animate();
 }
 
-async function updateCornerCityPhoto(cityName) {
-  const photoElem = document.getElementById('city-photo-corner');
-  if (!photoElem) return;
-
+async function fetchUVIndex(lat, lon) {
   try {
-    // Используем публичный CORS-прокси для поиска картинок через Yahoo
-    const query = encodeURIComponent(`${cityName} city landmark photo`);
-    const targetUrl = `https://images.search.yahoo.com/search/images?p=${query}`;
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
-
-    const response = await fetch(proxyUrl);
-    const data = await response.json();
-
-    if (data.contents) {
-      // Парсим URL реального изображения из ответа Yahoo
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(data.contents, 'text/html');
-      const imgElements = doc.querySelectorAll('li.ld a img');
-
-      if (imgElements.length > 0) {
-        // Берем первое найденное фото из результатов Yahoo
-        const photoUrl = imgElements[0].getAttribute('data-src') || imgElements[0].src;
-        
-        const img = new Image();
-        img.src = photoUrl;
-        img.onload = () => {
-          photoElem.style.backgroundImage = `url('${photoUrl}')`;
-        };
-        return;
-      }
-    }
-  } catch (err) {
-    console.error('Ошибка при загрузке фото с Yahoo:', err);
-  }
-
-  // Резервный источник, если Yahoo не вернул фото
-  const fallbackUrl = `https://loremflickr.com/600/400/${encodeURIComponent(cityName)},city/all`;
-  photoElem.style.backgroundImage = `url('${fallbackUrl}')`;
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=uv_index`);
+    if (!res.ok) return 0;
+    const data = await res.json();
+    return Math.round(data.current.uv_index || 0);
+  } catch (err) { return 0; }
 }
+
+// Загрузка фото без зависаний
 function updateCornerCityPhoto(cityName) {
   const photoElem = document.getElementById('city-photo-corner');
   if (!photoElem) return;
 
-  const imageUrl = `https://picsum.photos/seed/${encodeURIComponent(cityName)}/500/400`;
+  const imageUrl = `https://loremflickr.com/600/400/${encodeURIComponent(cityName)},city/all`;
   
   const img = new Image();
   img.src = imageUrl;
   img.onload = () => {
     photoElem.style.backgroundImage = `url('${imageUrl}')`;
+  };
+  img.onerror = () => {
+    photoElem.style.backgroundImage = 'none';
   };
 }
 
