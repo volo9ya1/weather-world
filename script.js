@@ -332,18 +332,20 @@ function selectMode(mode) {
   if (modal) modal.style.display = 'none';
 }
 
+const optionItems = document.querySelectorAll('.dropdown-option');
+
 window.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('mode-modal');
   if (modal) modal.style.display = 'flex';
   
-  // Устанавливаем правильный активный класс в выпадающем списке при старте
   optionItems.forEach(item => {
     if (item.getAttribute('data-value') === currentLang) {
       item.classList.add('active');
       const flagHtml = item.querySelector('.flag').outerHTML;
       const textHtml = item.querySelector('.lang-text').outerHTML;
-      if (selected) {
-        selected.innerHTML = `${flagHtml} ${textHtml} <span class="arrow">▼</span>`;
+      const selectedElem = document.getElementById('dropdown-selected');
+      if (selectedElem) {
+        selectedElem.innerHTML = `${flagHtml} ${textHtml} <span class="arrow">▼</span>`;
       }
     } else {
       item.classList.remove('active');
@@ -598,7 +600,6 @@ function updateUI(w) {
 const dropdown = document.getElementById('lang-dropdown');
 const selected = document.getElementById('dropdown-selected');
 const options = document.getElementById('dropdown-options');
-const optionItems = document.querySelectorAll('.dropdown-option');
 
 if (selected && options) {
   selected.addEventListener('click', (e) => {
@@ -647,6 +648,12 @@ if (searchBtn) {
 
 if (cityInput) {
   cityInput.addEventListener('keypress', (e) => {
-    e.key === 'Enter' && (c = cityInput.value.trim()) && (autocompleteList.style.display = 'none', fetchWeather(c));
+    if (e.key === 'Enter') {
+      const c = cityInput.value.trim();
+      if (c) {
+        autocompleteList.style.display = 'none';
+        fetchWeather(c);
+      }
+    }
   });
 }
