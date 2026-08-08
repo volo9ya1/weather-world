@@ -38,6 +38,12 @@ const i18n = {
       extremeHot: "Слишком жарко. Лучше оставаться в тени 🌅",
       good: "Идеальная погода для прогулки или спорта на улице ☀️",
       normal: "Прекрасные условия для свежего воздуха! 🚶‍♂️"
+    },
+    prod: {
+      low: "⚠️ Низкое давление: Возможна сонливость, пейте больше чистой воды.",
+      highHumidity: "💧 Высокая влажность: Воздух тяжеловатый, чаще проветривайте помещение.",
+      highPressure: "🧊 Высокое давление: Возможна быстрая утомляемость.",
+      good: "⚡ Отличные атмосферные условия для максимальной продуктивности!"
     }
   },
   en: {
@@ -72,6 +78,12 @@ const i18n = {
       extremeHot: "Too hot. Stay in the shade 🌅",
       good: "Great temperature for a walk or outdoor activity ☀️",
       normal: "Wonderful weather for fresh air! 🚶‍♂️"
+    },
+    prod: {
+      low: "⚠️ Low pressure: Drowsiness is possible, drink more pure water.",
+      highHumidity: "💧 High humidity: The air is heavy, ventilate the room more often.",
+      highPressure: "🧊 High pressure: Rapid fatigue is possible.",
+      good: "⚡ Excellent atmospheric conditions for maximum productivity!"
     }
   },
   uz: {
@@ -106,6 +118,12 @@ const i18n = {
       extremeHot: "Juda issiq. Soyada bo'lish tavsiya etiladi 🌅",
       good: "Sayr qilish yoki sport uchun ajoyib havo ☀️",
       normal: "Taza havoda yurish uchun ajoyib sharoit! 🚶‍♂️"
+    },
+    prod: {
+      low: "⚠️ Past bosim: Uyquchanlik bo'lishi mumkin, ko'proq toza suv iching.",
+      highHumidity: "💧 Yuqori namlik: Havo og'irroq, xonani tez-tez shamollatib turing.",
+      highPressure: "🧊 Yuqori bosim: Tez charchash kuzatilishi mumkin.",
+      good: "⚡ Maksimal samaradorlik uchun ajoyib atmosfera sharoitlari!"
     }
   }
 };
@@ -142,7 +160,6 @@ function updateStarButton(cityName) {
   btn.onclick = () => toggleFavorite(cityName);
 }
 
-// Конвертация температур
 function formatTemp(tempC) {
   if (isCelsius) {
     return tempC > 0 ? `+${Math.round(tempC)}°C` : `${Math.round(tempC)}°C`;
@@ -152,49 +169,57 @@ function formatTemp(tempC) {
   }
 }
 
-// Переключатель единиц
 document.getElementById('unit-toggle').addEventListener('click', () => {
   isCelsius = !isCelsius;
   localStorage.setItem('weather_app_unit', isCelsius);
   if (currentWeatherData) processWeatherData(currentWeatherData);
 });
 
-// Автокомплит поиска городов
+// Локальный поиск по популярным городам
+const popularCities = [
+  { name: "Ташкент", country: "UZ", lat: 41.2995, lon: 69.2401 },
+  { name: "Москва", country: "RU", lat: 55.7558, lon: 37.6173 },
+  { name: "Санкт-Петербург", country: "RU", lat: 59.9343, lon: 30.3351 },
+  { name: "Лондон", country: "GB", lat: 51.5074, lon: -0.1278 },
+  { name: "New York", country: "US", lat: 40.7128, lon: -74.0060 },
+  { name: "Дубай", country: "AE", lat: 25.2048, lon: 55.2708 },
+  { name: "Стамбул", country: "TR", lat: 41.0082, lon: 28.9784 },
+  { name: "Самарканд", country: "UZ", lat: 39.6542, lon: 66.9597 },
+  { name: "Бухара", country: "UZ", lat: 39.7747, lon: 64.4286 }
+];
+
 const cityInput = document.getElementById('city-input');
 const autocompleteList = document.getElementById('autocomplete-list');
-let searchTimeout = null;
 
 cityInput.addEventListener('input', (e) => {
-  const val = e.target.value.trim();
-  clearTimeout(searchTimeout);
-  if (!val || val.length < 2) {
+  const val = e.target.value.trim().toLowerCase();
+  autocompleteList.innerHTML = '';
+  
+  if (!val) {
     autocompleteList.style.display = 'none';
     return;
   }
-  searchTimeout = setTimeout(async () => {
-    try {
-      const res = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(val)}&limit=5&appid=${API_KEY}`);
-      const cities = await res.json();
-      autocompleteList.innerHTML = '';
-      if (cities.length === 0) {
-        autocompleteList.style.display = 'none';
-        return;
-      }
-      cities.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'autocomplete-item';
-        const st = item.state ? `, ${item.state}` : '';
-        div.textContent = `${item.name}${st} (${item.country})`;
-        div.onclick = () => {
-          cityInput.value = item.name;
-          autocompleteList.style.display = 'none';
-          fetchWeatherByCoords(item.lat, item.lon);
-        };
-        autocompleteList.appendChild(div);
-      });
-      autocompleteList.style.display = 'block';
-    } catch (err) { console.error(err); }
-  }, 300);
+
+  const filtered = popularCities.filter(city => city.name.toLowerCase().includes(val));
+
+  if (filtered.length === 0) {
+    autocompleteList.style.display = 'none';
+    return;
+  }
+
+  filtered.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'autocomplete-item';
+    div.textContent = `${item.name} (${item.country})`;
+    div.onclick = () => {
+      cityInput.value = item.name;
+      autocompleteList.style.display = 'none';
+      fetchWeatherByCoords(item.lat, item.lon);
+    };
+    autocompleteList.appendChild(div);
+  });
+
+  autocompleteList.style.display = 'block';
 });
 
 document.addEventListener('click', (e) => {
@@ -203,7 +228,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Режимы экрана
 function setDeviceMode(mode) {
   const container = document.getElementById('app-container');
   if (!container) return;
@@ -229,31 +253,34 @@ window.addEventListener('DOMContentLoaded', () => {
   getUserLocation();
 });
 
-// REST COUNTRIES API (Валюта и Язык)
-async function fetchCountryInfo(countryCode) {
-  try {
-    const res = await fetch(`https://restcountries.com/v3.1/alpha/${countryCode}`);
-    const data = await res.json();
-    const country = data[0];
-    const currencies = country.currencies ? Object.values(country.currencies).map(c => `${c.name} (${c.symbol})`).join(', ') : 'Неизвестно';
-    const languages = country.languages ? Object.values(country.languages).join(', ') : 'Неизвестно';
-    document.getElementById('country-currency').textContent = currencies;
-    document.getElementById('country-language').textContent = languages;
-  } catch (err) {
-    document.getElementById('country-currency').textContent = 'Нет данных';
-    document.getElementById('country-language').textContent = 'Нет данных';
-  }
+// Надежная база данных стран для валют и языков (без CORS)
+const countriesDB = {
+  "UZ": { currency: "Узбекский сум (UZS)", languages: "Узбекский" },
+  "RU": { currency: "Российский рубль (RUB)", languages: "Русский" },
+  "US": { currency: "Доллар США (USD)", languages: "Английский" },
+  "GB": { currency: "Британский фунт (GBP)", languages: "Английский" },
+  "KZ": { currency: "Казахский тенге (KZT)", languages: "Казахский, Русский" },
+  "TR": { currency: "Турецкая лира (TRY)", languages: "Турецкий" },
+  "DE": { currency: "Евро (EUR)", languages: "Немецкий" },
+  "FR": { currency: "Евро (EUR)", languages: "Французский" },
+  "AE": { currency: "Дирхам ОАЭ (AED)", languages: "Арабский" }
+};
+
+function fetchCountryInfo(countryCode) {
+  const info = countriesDB[countryCode] || { currency: "Местная валюта", languages: "Государственный" };
+  document.getElementById('country-currency').textContent = info.currency;
+  document.getElementById('country-language').textContent = info.languages;
 }
 
-// Индекс продуктивности
+// Индекс продуктивности с переводом
 function calculateProductivity(pressureMmHg, humidity) {
-  if (pressureMmHg < 740) return "⚠️ Низкое давление: Возможна сонливость, пейте больше чистой воды.";
-  if (humidity > 85) return "💧 Высокая влажность: Воздух тяжеловатый, чаще проветривайте помещение.";
-  if (pressureMmHg > 775) return "🧊 Высокое давление: Возможна быстрая утомляемость.";
-  return "⚡ Отличные атмосферные условия для максимальной продуктивности!";
+  const t = i18n[currentLang].prod;
+  if (pressureMmHg < 740) return t.low;
+  if (humidity > 85) return t.highHumidity;
+  if (pressureMmHg > 775) return t.highPressure;
+  return t.good;
 }
 
-// Обратный отсчет до заката/рассвета
 function getSunCountdown(sunrise, sunset) {
   const now = Math.floor(Date.now() / 1000);
   let target, name;
@@ -287,7 +314,7 @@ function getMoonPhase() {
   const phases = ["🌑 Новолуние", "🌒 Молодая луна", "🌓 Первая четверть", "🌔 Растущая луна", "🌕 Полнолуние", "🌖 Убывающая луна", "🌗 Последняя четверть", "🌘 Старая луна"];
   return phases[phase % 8];
 }
-// График температур (Chart.js)
+
 function renderTemperatureChart(forecastList) {
   const ctx = document.getElementById('tempChart').getContext('2d');
   const labels = forecastList.slice(0, 8).map(item => item.dt_txt.slice(11, 16));
@@ -323,7 +350,6 @@ function renderTemperatureChart(forecastList) {
   });
 }
 
-// 5-дневный прогноз
 async function fetch5DayForecast(lat, lon) {
   try {
     const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`);
@@ -349,7 +375,6 @@ async function fetch5DayForecast(lat, lon) {
   } catch (err) { console.error(err); }
 }
 
-// УФ-индекс
 async function fetchUVIndex(lat, lon) {
   try {
     const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=uv_index`);
@@ -358,7 +383,6 @@ async function fetchUVIndex(lat, lon) {
   } catch (err) { return 0; }
 }
 
-// Уголок фото города
 function updateCornerCityPhoto(cityName) {
   const elem = document.getElementById('city-photo-corner');
   if (!elem) return;
@@ -369,7 +393,6 @@ function updateCornerCityPhoto(cityName) {
   img.onerror = () => { elem.style.backgroundImage = 'none'; };
 }
 
-// Получение локации пользователя
 function getUserLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -475,7 +498,6 @@ function updateUI(w) {
   }
 }
 
-// Смена языка
 document.getElementById('lang-select').value = currentLang;
 document.getElementById('lang-select').addEventListener('change', (e) => {
   currentLang = e.target.value;
@@ -484,7 +506,6 @@ document.getElementById('lang-select').addEventListener('change', (e) => {
   else getUserLocation();
 });
 
-// Кнопка поиска
 document.getElementById('search-btn').addEventListener('click', () => {
   const c = cityInput.value.trim();
   if (c) { autocompleteList.style.display = 'none'; fetchWeather(c); }
