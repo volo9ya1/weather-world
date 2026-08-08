@@ -42,6 +42,12 @@ const i18n = {
     },
     defaultCurrency: "Местная валюта",
     defaultLang: "Государственный",
+    uvStatuses: {
+      low: "Низкий",
+      moderate: "Умеренный",
+      high: "Высокий 🧴",
+      danger: "Опасный 🕶️"
+    },
     moonPhases: [
       "🌑 Новолуние", "🌒 Молодая луна", "🌓 Первая четверть", 
       "🌔 Растущая луна", "🌕 Полнолуние", "🌖 Убывающая луна", 
@@ -112,6 +118,12 @@ const i18n = {
     },
     defaultCurrency: "Local currency",
     defaultLang: "Official",
+    uvStatuses: {
+      low: "Low",
+      moderate: "Moderate",
+      high: "High 🧴",
+      danger: "Danger 🕶️"
+    },
     moonPhases: [
       "🌑 New Moon", "🌒 Waxing Crescent", "🌓 First Quarter", 
       "🌔 Waxing Gibbous", "🌕 Full Moon", "🌖 Waning Gibbous", 
@@ -181,6 +193,12 @@ const i18n = {
     },
     defaultCurrency: "Mahalliy valyuta",
     defaultLang: "Davlat tili",
+    uvStatuses: {
+      low: "Past",
+      moderate: "O'rtacha",
+      high: "Yuqori 🧴",
+      danger: "Xavfli 🕶️"
+    },
     moonPhases: [
       "🌑 Yangi oy", "🌒 O'sib boruvchi oy", "🌓 Birinchi chorak", 
       "🌔 Qavariq oy", "🌕 To'lin oy", "🌖 Kichiklashib boruvchi oy", 
@@ -533,11 +551,13 @@ function updateUI(w) {
   document.getElementById('wind-speed').textContent = `${w.wind} ${t.windUnit}`;
   document.getElementById('pressure').textContent = `${w.pressure} ${t.pressureUnit}`;
   
-  let uvStatus = "Низкий";
-  if (w.uv >= 3 && w.uv <= 5) uvStatus = "Умеренный";
-  else if (w.uv >= 6 && w.uv <= 7) uvStatus = "Высокий 🧴";
-  else if (w.uv >= 8) uvStatus = "Опасный 🕶️";
-  document.getElementById('uv-index').textContent = `${w.uv} (${uvStatus})`;
+  let uvStatusKey = "low";
+  if (w.uv >= 3 && w.uv <= 5) uvStatusKey = "moderate";
+  else if (w.uv >= 6 && w.uv <= 7) uvStatusKey = "high";
+  else if (w.uv >= 8) uvStatusKey = "danger";
+
+  const uvStatusText = t.uvStatuses ? t.uvStatuses[uvStatusKey] : uvStatusKey;
+  document.getElementById('uv-index').textContent = `${w.uv} (${uvStatusText})`;
 
   document.getElementById('productivity-text').textContent = w.productivity;
   document.getElementById('moon-phase').textContent = w.moonPhase;
@@ -560,14 +580,40 @@ function updateUI(w) {
   }
 }
 
-const langSelect = document.getElementById('lang-select');
-if (langSelect) {
-  langSelect.value = currentLang;
-  langSelect.addEventListener('change', (e) => {
-    currentLang = e.target.value;
-    localStorage.setItem('weather_app_lang', currentLang);
-    if (currentWeatherData) processWeatherData(currentWeatherData);
-    else getUserLocation();
+// Кастомный выпадающий список языков с флагами
+const dropdown = document.getElementById('lang-dropdown');
+const selected = document.getElementById('dropdown-selected');
+const options = document.getElementById('dropdown-options');
+const optionItems = document.querySelectorAll('.dropdown-option');
+
+if (selected && options) {
+  selected.addEventListener('click', (e) => {
+    e.stopPropagation();
+    options.classList.toggle('open');
+  });
+
+  document.addEventListener('click', () => {
+    options.classList.remove('open');
+  });
+
+  optionItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const value = item.getAttribute('data-value');
+      const flagHtml = item.querySelector('.flag').outerHTML;
+      const textHtml = item.querySelector('.lang-text').outerHTML;
+      
+      selected.innerHTML = `${flagHtml} ${textHtml} <span class="arrow">▼</span>`;
+      
+      optionItems.forEach(opt => opt.classList.remove('active'));
+      item.classList.add('active');
+      
+      options.classList.remove('open');
+
+      currentLang = value;
+      localStorage.setItem('weather_app_lang', currentLang);
+      if (currentWeatherData) processWeatherData(currentWeatherData);
+      else getUserLocation();
+    });
   });
 }
 
