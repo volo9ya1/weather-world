@@ -335,6 +335,21 @@ function selectMode(mode) {
 window.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('mode-modal');
   if (modal) modal.style.display = 'flex';
+  
+  // Устанавливаем правильный активный класс в выпадающем списке при старте
+  optionItems.forEach(item => {
+    if (item.getAttribute('data-value') === currentLang) {
+      item.classList.add('active');
+      const flagHtml = item.querySelector('.flag').outerHTML;
+      const textHtml = item.querySelector('.lang-text').outerHTML;
+      if (selected) {
+        selected.innerHTML = `${flagHtml} ${textHtml} <span class="arrow">▼</span>`;
+      }
+    } else {
+      item.classList.remove('active');
+    }
+  });
+
   renderFavorites();
   getUserLocation();
 });
@@ -439,7 +454,7 @@ async function fetch5DayForecast(lat, lon) {
     if (!grid) return;
     grid.innerHTML = '';
     daily.slice(0, 5).forEach(day => {
-      const dateStr = new Date(day.dt * 1000).toLocaleDateString(currentLang, { weekday: 'short' });
+      const dateStr = new Date(day.dt * 1000).toLocaleDateString(currentLang === 'uz' ? 'uz-UZ' : currentLang, { weekday: 'short' });
       const tempFormatted = formatTemp(day.main.temp);
       const icon = day.weather[0].main.toLowerCase().includes('rain') ? '🌧️' : 
                    day.weather[0].main.toLowerCase().includes('snow') ? '❄️' : '☀️';
@@ -580,7 +595,6 @@ function updateUI(w) {
   }
 }
 
-// Кастомный выпадающий список языков с флагами
 const dropdown = document.getElementById('lang-dropdown');
 const selected = document.getElementById('dropdown-selected');
 const options = document.getElementById('dropdown-options');
@@ -611,8 +625,14 @@ if (selected && options) {
 
       currentLang = value;
       localStorage.setItem('weather_app_lang', currentLang);
-      if (currentWeatherData) processWeatherData(currentWeatherData);
-      else getUserLocation();
+      
+      updateStaticTranslations();
+
+      if (currentWeatherData) {
+        processWeatherData(currentWeatherData);
+      } else {
+        getUserLocation();
+      }
     });
   });
 }
@@ -627,9 +647,6 @@ if (searchBtn) {
 
 if (cityInput) {
   cityInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      const c = cityInput.value.trim();
-      if (c) { autocompleteList.style.display = 'none'; fetchWeather(c); }
-    }
+    e.key === 'Enter' && (c = cityInput.value.trim()) && (autocompleteList.style.display = 'none', fetchWeather(c));
   });
 }
