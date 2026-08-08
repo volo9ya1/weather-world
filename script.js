@@ -332,13 +332,11 @@ function selectMode(mode) {
   if (modal) modal.style.display = 'none';
 }
 
-const optionItems = document.querySelectorAll('.dropdown-option');
-
 window.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('mode-modal');
   if (modal) modal.style.display = 'flex';
   
-  optionItems.forEach(item => {
+  document.querySelectorAll('.dropdown-option').forEach(item => {
     if (item.getAttribute('data-value') === currentLang) {
       item.classList.add('active');
       const flagHtml = item.querySelector('.flag').outerHTML;
@@ -597,7 +595,6 @@ function updateUI(w) {
   }
 }
 
-const dropdown = document.getElementById('lang-dropdown');
 const selected = document.getElementById('dropdown-selected');
 const options = document.getElementById('dropdown-options');
 
@@ -611,30 +608,31 @@ if (selected && options) {
     options.classList.remove('open');
   });
 
-  optionItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const value = item.getAttribute('data-value');
-      const flagHtml = item.querySelector('.flag').outerHTML;
-      const textHtml = item.querySelector('.lang-text').outerHTML;
-      
-      selected.innerHTML = `${flagHtml} ${textHtml} <span class="arrow">▼</span>`;
-      
-      optionItems.forEach(opt => opt.classList.remove('active'));
-      item.classList.add('active');
-      
-      options.classList.remove('open');
+  options.addEventListener('click', (e) => {
+    const item = e.target.closest('.dropdown-option');
+    if (!item) return;
 
-      currentLang = value;
-      localStorage.setItem('weather_app_lang', currentLang);
-      
-      updateStaticTranslations();
+    const value = item.getAttribute('data-value');
+    const flagHtml = item.querySelector('.flag').outerHTML;
+    const textHtml = item.querySelector('.lang-text').outerHTML;
+    
+    selected.innerHTML = `${flagHtml} ${textHtml} <span class="arrow">▼</span>`;
+    
+    document.querySelectorAll('.dropdown-option').forEach(opt => opt.classList.remove('active'));
+    item.classList.add('active');
+    
+    options.classList.remove('open');
 
-      if (currentWeatherData) {
-        processWeatherData(currentWeatherData);
-      } else {
-        getUserLocation();
-      }
-    });
+    currentLang = value;
+    localStorage.setItem('weather_app_lang', currentLang);
+    
+    updateStaticTranslations();
+
+    if (currentWeatherData) {
+      processWeatherData(currentWeatherData);
+    } else {
+      getUserLocation();
+    }
   });
 }
 
