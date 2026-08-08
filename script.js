@@ -270,26 +270,23 @@ function getSunCountdown(sunrise, sunset) {
   return `До ${name}: ${h}ч. ${m}мин.`;
 }
 
-// Фаза луны (простой расчет)
 function getMoonPhase() {
   const date = new Date();
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  let c = 0, e = 0, jd = 0, b = 0;
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
   if (month < 3) { year--; month += 12; }
   ++month;
-  c = 365.25 * year;
-  e = 30.6 * month;
-  jd = c + e + day - 694039.0;
+  let c = 365.25 * year;
+  let e = 30.6 * month;
+  let jd = c + e + day - 694039.0;
   jd /= 29.53058867;
-  b = parseInt(jd);
+  let b = parseInt(jd);
   jd -= b;
-  const phase = Math.round(jd * 8);
+  let phase = Math.round(jd * 8);
   const phases = ["🌑 Новолуние", "🌒 Молодая луна", "🌓 Первая четверть", "🌔 Растущая луна", "🌕 Полнолуние", "🌖 Убывающая луна", "🌗 Последняя четверть", "🌘 Старая луна"];
   return phases[phase % 8];
 }
-
 // График температур (Chart.js)
 function renderTemperatureChart(forecastList) {
   const ctx = document.getElementById('tempChart').getContext('2d');
