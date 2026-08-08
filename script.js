@@ -259,9 +259,8 @@ function renderFavorites() {
   favorites.forEach(city => {
     const chip = document.createElement('div');
     chip.className = 'fav-chip';
-    // Берем переведенное название города из словаря, если оно есть, иначе оставляем оригинал
-    const cityNameTranslated = (t.cities && t.cities[city]) ? t.cities[city] : city;
-    chip.innerHTML = `📍 ${cityNameTranslated}`;
+    const displayName = (t.cities && t.cities[city]) ? t.cities[city] : city;
+    chip.innerHTML = `📍 ${displayName}`;
     chip.onclick = () => fetchWeather(city);
     bar.appendChild(chip);
   });
@@ -554,7 +553,7 @@ function updateStaticTranslations() {
     if (t && t[key]) el.textContent = t[key];
   });
   if (cityInput && t) cityInput.placeholder = t.searchPlaceholder;
-  renderFavorites(); // Перерисовываем избранные города при смене языка
+  renderFavorites();
 }
 
 function updateUI(w) {
@@ -600,7 +599,6 @@ function updateUI(w) {
   }
 }
 
-// Кастомный выпадающий список языков с флагами
 const dropdown = document.getElementById('lang-dropdown');
 const selected = document.getElementById('dropdown-selected');
 const options = document.getElementById('dropdown-options');
@@ -631,8 +629,14 @@ if (selected && options) {
 
       currentLang = value;
       localStorage.setItem('weather_app_lang', currentLang);
-      if (currentWeatherData) processWeatherData(currentWeatherData);
-      else getUserLocation();
+      
+      updateStaticTranslations();
+
+      if (currentWeatherData) {
+        processWeatherData(currentWeatherData);
+      } else {
+        getUserLocation();
+      }
     });
   });
 }
