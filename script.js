@@ -18,6 +18,21 @@ const i18n = {
     uvLabel: "УФ-индекс", selectedCityLabel: "Активная локация:",
     recTitle: "💡 Умный анализ дня", clothesTitle: "Что надеть?", walkTitle: "Идти ли гулять?",
     windUnit: "м/с", pressureUnit: "мм рт.ст.",
+    feelsLikeText: "Ощущается как",
+    prodTitle: "🧠 Индекс продуктивности",
+    moonTitle: "🌙 Фаза луны",
+    forecastTitle: "📅 Прогноз на 5 дней",
+    chartTitle: "📈 Температурный тренд (24ч)",
+    currencyTitle: "💳 Валюта:",
+    langTitle: "🗣️ Язык:",
+    chartLabel: "Температура",
+    sunriseText: "До рассвета",
+    sunsetText: "До заката",
+    moonPhases: [
+      "🌑 Новолуние", "🌒 Молодая луна", "🌓 Первая четверть", 
+      "🌔 Растущая луна", "🌕 Полнолуние", "🌖 Убывающая луна", 
+      "🌗 Последняя четверть", "🌘 Старая луна"
+    ],
     conditions: {
       "clear": "Ясно", "clouds": "Облачно", "overcast clouds": "Пасмурно",
       "few clouds": "Малооблачно", "scattered clouds": "Переменная облачность",
@@ -59,6 +74,21 @@ const i18n = {
     uvLabel: "UV Index", selectedCityLabel: "Active Location:",
     recTitle: "💡 Smart Daily Analysis", clothesTitle: "What to wear?", walkTitle: "Go for a walk?",
     windUnit: "m/s", pressureUnit: "mmHg",
+    feelsLikeText: "Feels like",
+    prodTitle: "🧠 Productivity Index",
+    moonTitle: "🌙 Moon Phase",
+    forecastTitle: "📅 5-Day Forecast",
+    chartTitle: "📈 Temperature Trend (24h)",
+    currencyTitle: "💳 Currency:",
+    langTitle: "🗣️ Language:",
+    chartLabel: "Temperature",
+    sunriseText: "Until sunrise",
+    sunsetText: "Until sunset",
+    moonPhases: [
+      "🌑 New Moon", "🌒 Waxing Crescent", "🌓 First Quarter", 
+      "🌔 Waxing Gibbous", "🌕 Full Moon", "🌖 Waning Gibbous", 
+      "🌗 Last Quarter", "🌘 Waning Crescent"
+    ],
     conditions: {
       "clear": "Clear sky", "clouds": "Clouds", "overcast clouds": "Overcast clouds",
       "few clouds": "Few clouds", "scattered clouds": "Scattered clouds",
@@ -99,6 +129,21 @@ const i18n = {
     uvLabel: "UV Indeksi", selectedCityLabel: "Faol joylashuv:",
     recTitle: "💡 Aqlli kun tahlili", clothesTitle: "Nima kiyish kerak?", walkTitle: "Sayrga chiqish kerakmi?",
     windUnit: "m/s", pressureUnit: "mm sim. ust.",
+    feelsLikeText: "Sezilishi",
+    prodTitle: "🧠 Samaradorlik indeksi",
+    moonTitle: "🌙 Oy fazasi",
+    forecastTitle: "📅 5 kunlik prognoz",
+    chartTitle: "📈 Harorat trendi (24s)",
+    currencyTitle: "💳 Valyuta:",
+    langTitle: "🗣️ Til:",
+    chartLabel: "Harorat",
+    sunriseText: "Tong otishigacha",
+    sunsetText: "Quyosh botishigacha",
+    moonPhases: [
+      "🌑 Yangi oy", "🌒 O'sib boruvchi oy", "🌓 Birinchi chorak", 
+      "🌔 Qavariq oy", "🌕 To'lin oy", "🌖 Kichiklashib boruvchi oy", 
+      "🌗 Oxirgi chorak", "🌘 Eski oy"
+    ],
     conditions: {
       "clear": "Ochiq havo", "clouds": "Bulutli", "overcast clouds": "Juda bulutli",
       "few clouds": "Biroz bulutli", "scattered clouds": "O'rtacha bulutli",
@@ -128,7 +173,6 @@ const i18n = {
   }
 };
 
-// Избранные города
 let favorites = JSON.parse(localStorage.getItem('weather_favs')) || ['Ташкент', 'Москва', 'Лондон'];
 
 function renderFavorites() {
@@ -175,7 +219,6 @@ document.getElementById('unit-toggle').addEventListener('click', () => {
   if (currentWeatherData) processWeatherData(currentWeatherData);
 });
 
-// Локальный поиск по популярным городам
 const popularCities = [
   { name: "Ташкент", country: "UZ", lat: 41.2995, lon: 69.2401 },
   { name: "Москва", country: "RU", lat: 55.7558, lon: 37.6173 },
@@ -194,19 +237,9 @@ const autocompleteList = document.getElementById('autocomplete-list');
 cityInput.addEventListener('input', (e) => {
   const val = e.target.value.trim().toLowerCase();
   autocompleteList.innerHTML = '';
-  
-  if (!val) {
-    autocompleteList.style.display = 'none';
-    return;
-  }
-
+  if (!val) { autocompleteList.style.display = 'none'; return; }
   const filtered = popularCities.filter(city => city.name.toLowerCase().includes(val));
-
-  if (filtered.length === 0) {
-    autocompleteList.style.display = 'none';
-    return;
-  }
-
+  if (filtered.length === 0) { autocompleteList.style.display = 'none'; return; }
   filtered.forEach(item => {
     const div = document.createElement('div');
     div.className = 'autocomplete-item';
@@ -218,7 +251,6 @@ cityInput.addEventListener('input', (e) => {
     };
     autocompleteList.appendChild(div);
   });
-
   autocompleteList.style.display = 'block';
 });
 
@@ -253,7 +285,6 @@ window.addEventListener('DOMContentLoaded', () => {
   getUserLocation();
 });
 
-// Надежная база данных стран для валют и языков (без CORS)
 const countriesDB = {
   "UZ": { currency: "Узбекский сум (UZS)", languages: "Узбекский" },
   "RU": { currency: "Российский рубль (RUB)", languages: "Русский" },
@@ -272,7 +303,6 @@ function fetchCountryInfo(countryCode) {
   document.getElementById('country-language').textContent = info.languages;
 }
 
-// Индекс продуктивности с переводом
 function calculateProductivity(pressureMmHg, humidity) {
   const t = i18n[currentLang].prod;
   if (pressureMmHg < 740) return t.low;
@@ -284,17 +314,18 @@ function calculateProductivity(pressureMmHg, humidity) {
 function getSunCountdown(sunrise, sunset) {
   const now = Math.floor(Date.now() / 1000);
   let target, name;
+  const t = i18n[currentLang];
   if (now < sunrise) {
-    target = sunrise; name = "рассвета";
+    target = sunrise; name = t.sunriseText;
   } else if (now < sunset) {
-    target = sunset; name = "заката";
+    target = sunset; name = t.sunsetText;
   } else {
-    target = sunrise + 86400; name = "рассвета";
+    target = sunrise + 86400; name = t.sunriseText;
   }
   const diff = target - now;
   const h = Math.floor(diff / 3600);
   const m = Math.floor((diff % 3600) / 60);
-  return `До ${name}: ${h}ч. ${m}мин.`;
+  return `${name}: ${h}ч. ${m}мин.`;
 }
 
 function getMoonPhase() {
@@ -311,7 +342,7 @@ function getMoonPhase() {
   let b = parseInt(jd);
   jd -= b;
   let phase = Math.round(jd * 8);
-  const phases = ["🌑 Новолуние", "🌒 Молодая луна", "🌓 Первая четверть", "🌔 Растущая луна", "🌕 Полнолуние", "🌖 Убывающая луна", "🌗 Последняя четверть", "🌘 Старая луна"];
+  const phases = i18n[currentLang].moonPhases;
   return phases[phase % 8];
 }
 
@@ -319,6 +350,7 @@ function renderTemperatureChart(forecastList) {
   const ctx = document.getElementById('tempChart').getContext('2d');
   const labels = forecastList.slice(0, 8).map(item => item.dt_txt.slice(11, 16));
   const temps = forecastList.slice(0, 8).map(item => isCelsius ? item.main.temp : (item.main.temp * 9/5) + 32);
+  const t = i18n[currentLang];
 
   if (tempChartInstance) tempChartInstance.destroy();
 
@@ -327,7 +359,7 @@ function renderTemperatureChart(forecastList) {
     data: {
       labels: labels,
       datasets: [{
-        label: isCelsius ? 'Температура (°C)' : 'Температура (°F)',
+        label: `${t.chartLabel} (${isCelsius ? '°C' : '°F'})`,
         data: temps,
         borderColor: '#4facfe',
         backgroundColor: 'rgba(79, 172, 254, 0.1)',
@@ -465,7 +497,7 @@ function updateUI(w) {
   document.getElementById('city-name').textContent = w.city;
   document.getElementById('bottom-city-name').textContent = w.city;
   document.getElementById('temp-value').textContent = formatTemp(w.temp);
-  document.getElementById('feels-like').textContent = `Ощущается как ${formatTemp(w.feelsLike)}`;
+  document.getElementById('feels-like').textContent = `${t.feelsLikeText} ${formatTemp(w.feelsLike)}`;
   document.getElementById('weather-desc').textContent = desc;
   document.getElementById('humidity').textContent = `${w.humidity}%`;
   document.getElementById('wind-speed').textContent = `${w.wind} ${t.windUnit}`;
