@@ -335,20 +335,6 @@ function selectMode(mode) {
 window.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('mode-modal');
   if (modal) modal.style.display = 'flex';
-  
-  document.querySelectorAll('.dropdown-option').forEach(item => {
-    if (item.getAttribute('data-value') === currentLang) {
-      item.classList.add('active');
-      const flagHtml = item.querySelector('.flag').outerHTML;
-      const textHtml = item.querySelector('.lang-text').outerHTML;
-      const selectedElem = document.getElementById('dropdown-selected');
-      if (selectedElem) {
-        selectedElem.innerHTML = `${flagHtml} ${textHtml} <span class="arrow">▼</span>`;
-      }
-    } else {
-      item.classList.remove('active');
-    }
-  });
 
   renderFavorites();
   getUserLocation();
@@ -595,39 +581,14 @@ function updateUI(w) {
   }
 }
 
-const selected = document.getElementById('dropdown-selected');
-const options = document.getElementById('dropdown-options');
-
-if (selected && options) {
-  selected.addEventListener('click', (e) => {
-    e.stopPropagation();
-    options.classList.toggle('open');
-  });
-
-  document.addEventListener('click', () => {
-    options.classList.remove('open');
-  });
-
-  options.addEventListener('click', (e) => {
-    const item = e.target.closest('.dropdown-option');
-    if (!item) return;
-
-    const value = item.getAttribute('data-value');
-    const flagHtml = item.querySelector('.flag').outerHTML;
-    const textHtml = item.querySelector('.lang-text').outerHTML;
-    
-    selected.innerHTML = `${flagHtml} ${textHtml} <span class="arrow">▼</span>`;
-    
-    document.querySelectorAll('.dropdown-option').forEach(opt => opt.classList.remove('active'));
-    item.classList.add('active');
-    
-    options.classList.remove('open');
-
-    currentLang = value;
+// Обработка переключения языка в селекте вверху
+const langSelect = document.getElementById('lang-select');
+if (langSelect) {
+  langSelect.value = currentLang;
+  langSelect.addEventListener('change', (e) => {
+    currentLang = e.target.value;
     localStorage.setItem('weather_app_lang', currentLang);
-    
     updateStaticTranslations();
-
     if (currentWeatherData) {
       processWeatherData(currentWeatherData);
     } else {
