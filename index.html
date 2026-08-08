@@ -3,62 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Погода Liquid Glass</title>
+  <title>Ultimate Weather Liquid Glass</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Подключаем Chart.js для графиков температуры -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <canvas id="weather-canvas"></canvas>
+  <div id="lightning-overlay"></div>
 
   <!-- Модальное окно выбора режима -->
   <div id="mode-modal" class="modal-overlay">
     <div class="modal-content">
+      <div class="modal-badge">✨ PREMIUM INTERFACE</div>
       <h2 data-i18n="modalTitle">ВЫБЕРИТЕ РЕЖИМ ИНТЕРФЕЙСА:</h2>
       
       <div class="modal-options">
         <div class="option-card" onclick="selectMode('mobile')">
           <div class="option-icon">📱</div>
           <h3 data-i18n="modalMobileTitle">СМАРТФОН / ПЛАНШЕТ</h3>
-          <p data-i18n="modalMobileDesc">Выберите этот режим, если хотите использовать сенсорный экран для управления</p>
+          <p data-i18n="modalMobileDesc">Оптимизированный вертикальный интерфейс для сенсорных экранов</p>
           <button type="button" class="modal-btn" data-i18n="modalMobileBtn">СЕНСОРНЫЙ</button>
         </div>
 
         <div class="option-card" onclick="selectMode('pc')">
           <div class="option-icon">🖥️</div>
           <h3 data-i18n="modalPcTitle">ПК / TV BOX</h3>
-          <p data-i18n="modalPcDesc">Выберите этот режим для работы на широком экране с клавиатурой и мышью</p>
+          <p data-i18n="modalPcDesc">Широкоформатный дэшборд со всеми расширенными виджетами</p>
           <button type="button" class="modal-btn" data-i18n="modalPcBtn">ПК РЕЖИМ</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Верхняя панель управления -->
   <div class="top-bar">
-    <div class="brand-logo">☀️ Weather App</div>
-    <select id="lang-select">
-      <option value="ru">RU 🇷🇺</option>
-      <option value="en">EN 🇬🇧</option>
-      <option value="uz">UZ 🇺🇿</option>
-    </select>
+    <div class="brand-logo"><i class="fa-solid fa-cloud-sun-rain"></i> Weather Pro Max</div>
+    <div class="top-controls">
+      <button id="unit-toggle" class="top-btn" title="Переключить единицы измерения">°C / °F</button>
+      <select id="lang-select">
+        <option value="ru">RU 🇷🇺</option>
+        <option value="en">EN 🇬🇧</option>
+        <option value="uz">UZ 🇺🇿</option>
+      </select>
+    </div>
   </div>
 
-  <div class="search-box">
-    <input type="text" id="city-input" placeholder="Введите город...">
-    <button id="search-btn">
-      <i class="fa-solid fa-magnifying-glass"></i>
-    </button>
+  <!-- Панель Избранных городов -->
+  <div id="favorites-bar" class="favorites-bar"></div>
+
+  <!-- Поиск с автокомплитом -->
+  <div class="search-wrapper">
+    <div class="search-box">
+      <input type="text" id="city-input" placeholder="Введите город или регион..." autocomplete="off">
+      <button id="search-btn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+    <div id="autocomplete-list" class="autocomplete-items"></div>
   </div>
 
+  <!-- Главный контейнер приложения -->
   <div id="app-container" class="glass-container mode-pc">
+    
+    <!-- ЛЕВАЯ КОЛОНКА: Основные данные -->
     <section class="glass-card section-main">
       <div id="city-photo-corner"></div>
 
       <div>
-        <h1 id="city-name">Загрузка...</h1>
+        <div class="city-title-row">
+          <h1 id="city-name">Загрузка...</h1>
+          <button id="fav-toggle-btn" class="fav-star-btn" title="Добавить в избранное">☆</button>
+        </div>
         <p id="weather-desc">...</p>
-        <h2 id="temp-value">--</h2>
+        <div class="temp-row">
+          <h2 id="temp-value">--</h2>
+          <span id="feels-like">Ощущается как --</span>
+        </div>
       </div>
       
+      <!-- Сетка параметров погоды -->
       <div class="weather-details">
         <div class="weather-info-item">
           <span class="icon">💧</span>
@@ -82,16 +107,33 @@
         </div>
       </div>
 
+      <!-- Блок путешественника (Валюта и Язык) -->
+      <div class="travel-pack-box">
+        <div class="travel-item">
+          <span>💳 Валюта:</span> <strong id="country-currency">--</strong>
+        </div>
+        <div class="travel-item">
+          <span>🗣️ Язык:</span> <strong id="country-language">--</strong>
+        </div>
+      </div>
+
       <div class="bottom-city-block">
-        <span class="bottom-label" data-i18n="selectedCityLabel">Выбранный город:</span>
+        <span class="bottom-label" data-i18n="selectedCityLabel">Активная локация:</span>
         <h3 id="bottom-city-name">--</h3>
       </div>
     </section>
 
+    <!-- ПРАВАЯ КОЛОНКА: Аналитика, советы и графики -->
     <section class="glass-card section-details">
       <div>
-        <h2 data-i18n="recTitle">💡 Советы на сегодня</h2>
+        <h2 data-i18n="recTitle">💡 Умный анализ дня</h2>
         
+        <!-- Индекс продуктивности -->
+        <div class="rec-block accent-block">
+          <h3>🧠 Индекс продуктивности</h3>
+          <p id="productivity-text">Анализ влияния атмосферы...</p>
+        </div>
+
         <div class="rec-block">
           <h3 data-i18n="clothesTitle">Что надеть?</h3>
           <p id="rec-clothes">Загрузка...</p>
@@ -101,8 +143,35 @@
           <h3 data-i18n="walkTitle">Идти ли гулять?</h3>
           <p id="rec-walk">Загрузка...</p>
         </div>
+
+        <!-- Астрономия (Фаза луны и закат) -->
+        <div class="astro-grid">
+          <div class="astro-card">
+            <span>🌙 Фаза луны</span>
+            <strong id="moon-phase">--</strong>
+          </div>
+          <div class="astro-card">
+            <span>⏳ До заката/рассвета</span>
+            <strong id="sun-countdown">--</strong>
+          </div>
+        </div>
+
+        <!-- График температур -->
+        <div class="chart-section">
+          <h3>📈 Температурный тренд (24ч)</h3>
+          <div class="chart-container">
+            <canvas id="tempChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Прогноз на 5 дней -->
+        <div class="forecast-section">
+          <h3>📅 Прогноз на 5 дней</h3>
+          <div id="forecast-grid" class="forecast-grid"></div>
+        </div>
       </div>
     </section>
+
   </div>
 
   <script src="script.js"></script>
