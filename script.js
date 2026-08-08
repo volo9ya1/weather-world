@@ -29,6 +29,11 @@ const i18n = {
     chartLabel: "Температура",
     untilSunrise: "До рассвета",
     untilSunset: "До заката",
+    cities: {
+      "Ташкент": "Ташкент",
+      "Москва": "Москва",
+      "Лондон": "Лондон"
+    },
     currencyLabels: {
       "UZ": "Узбекский сум (UZS)", "RU": "Российский рубль (RUB)",
       "US": "Доллар США (USD)", "GB": "Британский фунт (GBP)",
@@ -105,6 +110,11 @@ const i18n = {
     chartLabel: "Temperature",
     untilSunrise: "Until sunrise",
     untilSunset: "Until sunset",
+    cities: {
+      "Ташкент": "Tashkent",
+      "Москва": "Moscow",
+      "Лондон": "London"
+    },
     currencyLabels: {
       "UZ": "Uzbekistani Som (UZS)", "RU": "Russian Ruble (RUB)",
       "US": "US Dollar (USD)", "GB": "British Pound (GBP)",
@@ -180,6 +190,11 @@ const i18n = {
     chartLabel: "Harorat",
     untilSunrise: "Quyosh chiqishigacha",
     untilSunset: "Quyosh botishigacha",
+    cities: {
+      "Ташкент": "Toshkent",
+      "Москва": "Moskva",
+      "Лондон": "London"
+    },
     currencyLabels: {
       "UZ": "O'zbek so'mi (UZS)", "RU": "Rossiya rubli (RUB)",
       "US": "AQSh dollari (USD)", "GB": "Britaniya funti (GBP)",
@@ -239,10 +254,14 @@ function renderFavorites() {
   const bar = document.getElementById('favorites-bar');
   if (!bar) return;
   bar.innerHTML = '';
+  const t = i18n[currentLang];
+  
   favorites.forEach(city => {
     const chip = document.createElement('div');
     chip.className = 'fav-chip';
-    chip.innerHTML = `📍 ${city}`;
+    // Берем переведенное название города из словаря, если оно есть, иначе оставляем оригинал
+    const cityNameTranslated = (t.cities && t.cities[city]) ? t.cities[city] : city;
+    chip.innerHTML = `📍 ${cityNameTranslated}`;
     chip.onclick = () => fetchWeather(city);
     bar.appendChild(chip);
   });
@@ -535,6 +554,7 @@ function updateStaticTranslations() {
     if (t && t[key]) el.textContent = t[key];
   });
   if (cityInput && t) cityInput.placeholder = t.searchPlaceholder;
+  renderFavorites(); // Перерисовываем избранные города при смене языка
 }
 
 function updateUI(w) {
