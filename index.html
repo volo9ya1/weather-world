@@ -39,7 +39,7 @@
 
   <!-- Верхняя панель управления -->
   <div class="top-bar">
-    <div class="brand-logo"><i class="fa-solid fa-cloud-sun-rain"></i> Weather Pro Max</div>
+    <div class="brand-logo"><i class="fa-solid fa-cloud-sun-rain"></i> Weather by Kirill</div>
     <div class="top-controls">
       <button id="unit-toggle" class="top-btn" title="Переключить единицы измерения">°C / °F</button>
       <select id="lang-select">
@@ -110,10 +110,10 @@
       <!-- Блок путешественника (Валюта и Язык) -->
       <div class="travel-pack-box">
         <div class="travel-item">
-          <span>💳 Валюта:</span> <strong id="country-currency">--</strong>
+          <span data-i18n="currencyTitle">💳 Валюта:</span> <strong id="country-currency">--</strong>
         </div>
         <div class="travel-item">
-          <span>🗣️ Язык:</span> <strong id="country-language">--</strong>
+          <span data-i18n="langTitle">🗣️ Язык:</span> <strong id="country-language">--</strong>
         </div>
       </div>
 
@@ -130,7 +130,7 @@
         
         <!-- Индекс продуктивности -->
         <div class="rec-block accent-block">
-          <h3>🧠 Индекс продуктивности</h3>
+          <h3 data-i18n="prodTitle">🧠 Индекс продуктивности</h3>
           <p id="productivity-text">Анализ влияния атмосферы...</p>
         </div>
 
@@ -147,18 +147,18 @@
         <!-- Астрономия (Фаза луны и закат) -->
         <div class="astro-grid">
           <div class="astro-card">
-            <span>🌙 Фаза луны</span>
+            <span data-i18n="moonTitle">🌙 Фаза луны</span>
             <strong id="moon-phase">--</strong>
           </div>
           <div class="astro-card">
-            <span>⏳ До заката/рассвета</span>
+            <span data-i18n="sunCountdownTitle">⏳ До заката/рассвета</span>
             <strong id="sun-countdown">--</strong>
           </div>
         </div>
 
         <!-- График температур -->
         <div class="chart-section">
-          <h3>📈 Температурный тренд (24ч)</h3>
+          <h3 data-i18n="chartTitle">📈 Температурный тренд (24ч)</h3>
           <div class="chart-container">
             <canvas id="tempChart"></canvas>
           </div>
@@ -166,7 +166,7 @@
 
         <!-- Прогноз на 5 дней -->
         <div class="forecast-section">
-          <h3>📅 Прогноз на 5 дней</h3>
+          <h3 data-i18n="forecastTitle">📅 Прогноз на 5 дней</h3>
           <div id="forecast-grid" class="forecast-grid"></div>
         </div>
       </div>
