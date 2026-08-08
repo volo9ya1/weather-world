@@ -27,7 +27,7 @@ An interactive real-time weather web application featuring adaptive design and v
 
 1. Clone the repository:
    ```bash
-   git clone [https://gitlab.com/volo9ya1/mir-pogody.git](https://gitlab.com/volo9ya1/mir-pogody.git)
+   git clone [https://github.com/volo9ya1/weather-world]
    
 
 # 🌦️ Мир Погоды (Weather World)
@@ -59,5 +59,5 @@ An interactive real-time weather web application featuring adaptive design and v
 
 1. Клонируйте репозиторий:
    ```bash
-   git clone [https://gitlab.com/volo9ya1/mir-pogody.git](https://gitlab.com/volo9ya1/mir-pogody.git)
+   git clone [https://github.com/volo9ya1/weather-world]
 
