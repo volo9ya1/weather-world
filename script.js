@@ -10,7 +10,7 @@ const i18n = {
     modalMobileTitle: "СМАРТФОН / ПЛАНШЕТ",
     modalMobileDesc: "Оптимизированный вертикальный интерфейс для сенсорных экранов",
     modalMobileBtn: "СЕНСОРНЫЙ",
-    modalPcTitle: "ПК ",
+    modalPcTitle: "ПК",
     modalPcDesc: "Широкоформатный дэшборд со всеми расширенными виджетами",
     modalPcBtn: "ПК РЕЖИМ",
     searchPlaceholder: "Введите город или регион...",
@@ -21,13 +21,14 @@ const i18n = {
     feelsLikeText: "Ощущается как",
     prodTitle: "🧠 Индекс продуктивности",
     moonTitle: "🌙 Фаза луны",
+    sunCountdownTitle: "⏳ До заката/рассвета",
     forecastTitle: "📅 Прогноз на 5 дней",
     chartTitle: "📈 Температурный тренд (24ч)",
     currencyTitle: "💳 Валюта:",
     langTitle: "🗣️ Язык:",
     chartLabel: "Температура",
-    sunriseText: "До рассвета",
-    sunsetText: "До заката",
+    untilSunrise: "До рассвета",
+    untilSunset: "До заката",
     moonPhases: [
       "🌑 Новолуние", "🌒 Молодая луна", "🌓 Первая четверть", 
       "🌔 Растущая луна", "🌕 Полнолуние", "🌖 Убывающая луна", 
@@ -66,7 +67,7 @@ const i18n = {
     modalMobileTitle: "SMARTPHONE / TABLET",
     modalMobileDesc: "Optimized vertical layout for touchscreens",
     modalMobileBtn: "TOUCH",
-    modalPcTitle: "PC ",
+    modalPcTitle: "PC",
     modalPcDesc: "Widescreen dashboard with extended widgets",
     modalPcBtn: "PC MODE",
     searchPlaceholder: "Enter city or region...",
@@ -77,13 +78,14 @@ const i18n = {
     feelsLikeText: "Feels like",
     prodTitle: "🧠 Productivity Index",
     moonTitle: "🌙 Moon Phase",
+    sunCountdownTitle: "⏳ Until sunset/sunrise",
     forecastTitle: "📅 5-Day Forecast",
     chartTitle: "📈 Temperature Trend (24h)",
     currencyTitle: "💳 Currency:",
     langTitle: "🗣️ Language:",
     chartLabel: "Temperature",
-    sunriseText: "Until sunrise",
-    sunsetText: "Until sunset",
+    untilSunrise: "Until sunrise",
+    untilSunset: "Until sunset",
     moonPhases: [
       "🌑 New Moon", "🌒 Waxing Crescent", "🌓 First Quarter", 
       "🌔 Waxing Gibbous", "🌕 Full Moon", "🌖 Waning Gibbous", 
@@ -121,9 +123,9 @@ const i18n = {
     modalMobileTitle: "SMARTFON / PLANSHET",
     modalMobileDesc: "Sensor ekranlar uchun moslashtirilgan interfeys",
     modalMobileBtn: "SENSOR",
-    modalPcTitle: "PK ",
+    modalPcTitle: "KOMPYUTER",
     modalPcDesc: "Keng ekranli barcha vidjetlarga ega boshqaruv paneli",
-    modalPcBtn: "PK REJIM",
+    modalPcBtn: "KOMPYUTER REJIMI",
     searchPlaceholder: "Shahar yoki hududni kiriting...",
     humidityLabel: "Namlik", windLabel: "Shamol", pressureLabel: "Bosim",
     uvLabel: "UV Indeksi", selectedCityLabel: "Faol joylashuv:",
@@ -132,13 +134,14 @@ const i18n = {
     feelsLikeText: "Sezilishi",
     prodTitle: "🧠 Samaradorlik indeksi",
     moonTitle: "🌙 Oy fazasi",
+    sunCountdownTitle: "⏳ Quyosh botishigacha/chiqishigacha",
     forecastTitle: "📅 5 kunlik prognoz",
     chartTitle: "📈 Harorat trendi (24s)",
     currencyTitle: "💳 Valyuta:",
     langTitle: "🗣️ Til:",
     chartLabel: "Harorat",
-    sunriseText: "Tong otishigacha",
-    sunsetText: "Quyosh botishigacha",
+    untilSunrise: "Quyosh chiqishigacha",
+    untilSunset: "Quyosh botishigacha",
     moonPhases: [
       "🌑 Yangi oy", "🌒 O'sib boruvchi oy", "🌓 Birinchi chorak", 
       "🌔 Qavariq oy", "🌕 To'lin oy", "🌖 Kichiklashib boruvchi oy", 
@@ -234,46 +237,40 @@ const popularCities = [
 const cityInput = document.getElementById('city-input');
 const autocompleteList = document.getElementById('autocomplete-list');
 
-cityInput.addEventListener('input', (e) => {
-  const val = e.target.value.trim().toLowerCase();
-  autocompleteList.innerHTML = '';
-  if (!val) { autocompleteList.style.display = 'none'; return; }
-  const filtered = popularCities.filter(city => city.name.toLowerCase().includes(val));
-  if (filtered.length === 0) { autocompleteList.style.display = 'none'; return; }
-  filtered.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'autocomplete-item';
-    div.textContent = `${item.name} (${item.country})`;
-    div.onclick = () => {
-      cityInput.value = item.name;
-      autocompleteList.style.display = 'none';
-      fetchWeatherByCoords(item.lat, item.lon);
-    };
-    autocompleteList.appendChild(div);
+if (cityInput) {
+  cityInput.addEventListener('input', (e) => {
+    const val = e.target.value.trim().toLowerCase();
+    autocompleteList.innerHTML = '';
+    if (!val) { autocompleteList.style.display = 'none'; return; }
+    const filtered = popularCities.filter(city => city.name.toLowerCase().includes(val));
+    if (filtered.length === 0) { autocompleteList.style.display = 'none'; return; }
+    filtered.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'autocomplete-item';
+      div.textContent = `${item.name} (${item.country})`;
+      div.onclick = () => {
+        cityInput.value = item.name;
+        autocompleteList.style.display = 'none';
+        fetchWeatherByCoords(item.lat, item.lon);
+      };
+      autocompleteList.appendChild(div);
+    });
+    autocompleteList.style.display = 'block';
   });
-  autocompleteList.style.display = 'block';
-});
+}
 
 document.addEventListener('click', (e) => {
-  if (e.target !== cityInput && e.target !== autocompleteList) {
+  if (cityInput && autocompleteList && e.target !== cityInput && e.target !== autocompleteList) {
     autocompleteList.style.display = 'none';
   }
 });
 
-function setDeviceMode(mode) {
-  const container = document.getElementById('app-container');
-  if (!container) return;
-  if (mode === 'pc') {
-    container.classList.remove('mode-mobile');
-    container.classList.add('mode-pc');
-  } else {
-    container.classList.remove('mode-pc');
-    container.classList.add('mode-mobile');
-  }
-}
-
 function selectMode(mode) {
-  setDeviceMode(mode);
+  const container = document.getElementById('app-container');
+  if (container) {
+    container.classList.toggle('mode-pc', mode === 'pc');
+    container.classList.toggle('mode-mobile', mode === 'mobile');
+  }
   const modal = document.getElementById('mode-modal');
   if (modal) modal.style.display = 'none';
 }
@@ -313,19 +310,20 @@ function calculateProductivity(pressureMmHg, humidity) {
 
 function getSunCountdown(sunrise, sunset) {
   const now = Math.floor(Date.now() / 1000);
-  let target, name;
+  let target, isSunset;
   const t = i18n[currentLang];
   if (now < sunrise) {
-    target = sunrise; name = t.sunriseText;
+    target = sunrise; isSunset = false;
   } else if (now < sunset) {
-    target = sunset; name = t.sunsetText;
+    target = sunset; isSunset = true;
   } else {
-    target = sunrise + 86400; name = t.sunriseText;
+    target = sunrise + 86400; isSunset = false;
   }
   const diff = target - now;
   const h = Math.floor(diff / 3600);
   const m = Math.floor((diff % 3600) / 60);
-  return `${name}: ${h}ч. ${m}мин.`;
+  const label = isSunset ? t.untilSunset : t.untilSunrise;
+  return `${label}: ${h}ч. ${m}мин.`;
 }
 
 function getMoonPhase() {
@@ -347,7 +345,9 @@ function getMoonPhase() {
 }
 
 function renderTemperatureChart(forecastList) {
-  const ctx = document.getElementById('tempChart').getContext('2d');
+  const ctxElem = document.getElementById('tempChart');
+  if (!ctxElem) return;
+  const ctx = ctxElem.getContext('2d');
   const labels = forecastList.slice(0, 8).map(item => item.dt_txt.slice(11, 16));
   const temps = forecastList.slice(0, 8).map(item => isCelsius ? item.main.temp : (item.main.temp * 9/5) + 32);
   const t = i18n[currentLang];
@@ -530,22 +530,30 @@ function updateUI(w) {
   }
 }
 
-document.getElementById('lang-select').value = currentLang;
-document.getElementById('lang-select').addEventListener('change', (e) => {
-  currentLang = e.target.value;
-  localStorage.setItem('weather_app_lang', currentLang);
-  if (currentWeatherData) processWeatherData(currentWeatherData);
-  else getUserLocation();
-});
+const langSelect = document.getElementById('lang-select');
+if (langSelect) {
+  langSelect.value = currentLang;
+  langSelect.addEventListener('change', (e) => {
+    currentLang = e.target.value;
+    localStorage.setItem('weather_app_lang', currentLang);
+    if (currentWeatherData) processWeatherData(currentWeatherData);
+    else getUserLocation();
+  });
+}
 
-document.getElementById('search-btn').addEventListener('click', () => {
-  const c = cityInput.value.trim();
-  if (c) { autocompleteList.style.display = 'none'; fetchWeather(c); }
-});
-
-cityInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
+const searchBtn = document.getElementById('search-btn');
+if (searchBtn) {
+  searchBtn.addEventListener('click', () => {
     const c = cityInput.value.trim();
     if (c) { autocompleteList.style.display = 'none'; fetchWeather(c); }
-  }
-});
+  });
+}
+
+if (cityInput) {
+  cityInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const c = cityInput.value.trim();
+      if (c) { autocompleteList.style.display = 'none'; fetchWeather(c); }
+    }
+  });
+}
