@@ -258,7 +258,7 @@ select#lang-select option {
 /* Поиск */
 .search-wrapper {
   position: relative;
-  z-index: 10;
+  z-index: 100;
   max-width: 600px;
   margin: 20px auto;
   padding: 0 20px;
@@ -302,21 +302,22 @@ select#lang-select option {
   color: #00f2fe;
 }
 
-/* Автокомплит */
+/* Автокомплит поверх всех элементов */
 .autocomplete-items {
   position: absolute;
   top: 100%;
   left: 20px;
   right: 20px;
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(15, 23, 42, 0.98);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-top: none;
   border-radius: 0 0 14px 14px;
-  z-index: 99;
+  z-index: 9999;
   max-height: 200px;
   overflow-y: auto;
   display: none;
   backdrop-filter: blur(15px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
 }
 
 .autocomplete-item {
