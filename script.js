@@ -29,6 +29,19 @@ const i18n = {
     chartLabel: "Температура",
     untilSunrise: "До рассвета",
     untilSunset: "До заката",
+    currencyLabels: {
+      "UZ": "Узбекский сум (UZS)", "RU": "Российский рубль (RUB)",
+      "US": "Доллар США (USD)", "GB": "Британский фунт (GBP)",
+      "KZ": "Казахский тенге (KZT)", "TR": "Турецкая лира (TRY)",
+      "DE": "Евро (EUR)", "FR": "Евро (EUR)", "AE": "Дирхам ОАЭ (AED)"
+    },
+    langLabels: {
+      "UZ": "Узбекский", "RU": "Русский", "US": "Английский",
+      "GB": "Английский", "KZ": "Казахский, Русский", "TR": "Турецкий",
+      "DE": "Немецкий", "FR": "Французский", "AE": "Арабский"
+    },
+    defaultCurrency: "Местная валюта",
+    defaultLang: "Государственный",
     moonPhases: [
       "🌑 Новолуние", "🌒 Молодая луна", "🌓 Первая четверть", 
       "🌔 Растущая луна", "🌕 Полнолуние", "🌖 Убывающая луна", 
@@ -86,6 +99,19 @@ const i18n = {
     chartLabel: "Temperature",
     untilSunrise: "Until sunrise",
     untilSunset: "Until sunset",
+    currencyLabels: {
+      "UZ": "Uzbekistani Som (UZS)", "RU": "Russian Ruble (RUB)",
+      "US": "US Dollar (USD)", "GB": "British Pound (GBP)",
+      "KZ": "Kazakhstani Tenge (KZT)", "TR": "Turkish Lira (TRY)",
+      "DE": "Euro (EUR)", "FR": "Euro (EUR)", "AE": "UAE Dirham (AED)"
+    },
+    langLabels: {
+      "UZ": "Uzbek", "RU": "Russian", "US": "English",
+      "GB": "English", "KZ": "Kazakh, Russian", "TR": "Turkish",
+      "DE": "German", "FR": "French", "AE": "Arabic"
+    },
+    defaultCurrency: "Local currency",
+    defaultLang: "Official",
     moonPhases: [
       "🌑 New Moon", "🌒 Waxing Crescent", "🌓 First Quarter", 
       "🌔 Waxing Gibbous", "🌕 Full Moon", "🌖 Waning Gibbous", 
@@ -142,6 +168,19 @@ const i18n = {
     chartLabel: "Harorat",
     untilSunrise: "Quyosh chiqishigacha",
     untilSunset: "Quyosh botishigacha",
+    currencyLabels: {
+      "UZ": "O'zbek so'mi (UZS)", "RU": "Rossiya rubli (RUB)",
+      "US": "AQSh dollari (USD)", "GB": "Britaniya funti (GBP)",
+      "KZ": "Qozoq tengesi (KZT)", "TR": "Turk lirasi (TRY)",
+      "DE": "Yevro (EUR)", "FR": "Yevro (EUR)", "AE": "BАА dirhami (AED)"
+    },
+    langLabels: {
+      "UZ": "O'zbekcha", "RU": "Ruscha", "US": "Inglizcha",
+      "GB": "Inglizcha", "KZ": "Qozoqcha, Ruscha", "TR": "Turkcha",
+      "DE": "Nemischa", "FR": "Fransuzcha", "AE": "Arabcha"
+    },
+    defaultCurrency: "Mahalliy valyuta",
+    defaultLang: "Davlat tili",
     moonPhases: [
       "🌑 Yangi oy", "🌒 O'sib boruvchi oy", "🌓 Birinchi chorak", 
       "🌔 Qavariq oy", "🌕 To'lin oy", "🌖 Kichiklashib boruvchi oy", 
@@ -282,22 +321,13 @@ window.addEventListener('DOMContentLoaded', () => {
   getUserLocation();
 });
 
-const countriesDB = {
-  "UZ": { currency: "Узбекский сум (UZS)", languages: "Узбекский" },
-  "RU": { currency: "Российский рубль (RUB)", languages: "Русский" },
-  "US": { currency: "Доллар США (USD)", languages: "Английский" },
-  "GB": { currency: "Британский фунт (GBP)", languages: "Английский" },
-  "KZ": { currency: "Казахский тенге (KZT)", languages: "Казахский, Русский" },
-  "TR": { currency: "Турецкая лира (TRY)", languages: "Турецкий" },
-  "DE": { currency: "Евро (EUR)", languages: "Немецкий" },
-  "FR": { currency: "Евро (EUR)", languages: "Французский" },
-  "AE": { currency: "Дирхам ОАЭ (AED)", languages: "Арабский" }
-};
-
 function fetchCountryInfo(countryCode) {
-  const info = countriesDB[countryCode] || { currency: "Местная валюта", languages: "Государственный" };
-  document.getElementById('country-currency').textContent = info.currency;
-  document.getElementById('country-language').textContent = info.languages;
+  const t = i18n[currentLang];
+  const currency = t.currencyLabels[countryCode] || t.defaultCurrency;
+  const languages = t.langLabels[countryCode] || t.defaultLang;
+
+  document.getElementById('country-currency').textContent = currency;
+  document.getElementById('country-language').textContent = languages;
 }
 
 function calculateProductivity(pressureMmHg, humidity) {
