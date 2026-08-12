@@ -18,6 +18,23 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+
+  <!-- Экран загрузки (Звездное небо) -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="stars-bg"></div>
+    <div class="meteor-shower">
+      <div class="meteor"></div>
+      <div class="meteor"></div>
+      <div class="meteor"></div>
+      <div class="meteor"></div>
+    </div>
+    <div class="splash-content">
+      <img src="favicon2.png" alt="Weather by Kirill" class="splash-logo"> 
+      <!-- Поменять тут сверху-->
+      <div class="splash-loader"></div>
+    </div>
+  </div>
+
   <canvas id="weather-canvas"></canvas>
   <div id="lightning-overlay"></div>
 
@@ -37,7 +54,7 @@
 
         <div class="option-card" onclick="selectMode('pc')">
           <div class="option-icon">🖥️</div>
-          <h3 data-i18n="modalPcTitle">ПК </h3>
+          <h3 data-i18n="modalPcTitle">ПК</h3>
           <p data-i18n="modalPcDesc">Широкоформатный дэшборд со всеми расширенными виджетами</p>
           <button type="button" class="modal-btn" data-i18n="modalPcBtn">ПК РЕЖИМ</button>
         </div>
@@ -48,8 +65,8 @@
   <!-- Верхняя панель управления -->
   <div class="top-bar">
     <div class="brand-logo">
-      <img src="https://raw.githubusercontent.com/volo9ya1/weather-world/refs/heads/main/favicon.ico" alt="Avatar" style="width: 28px; height: 28px; vertical-align: middle; margin-right: 8px; border-radius: 4px; object-fit: cover;">
-      Weather by Kirill
+      <img src="https://raw.githubusercontent.com/volo9ya1/weather-world/refs/heads/main/favicon.ico" alt="Avatar" class="brand-avatar" style="width: 28px; height: 28px; vertical-align: middle; margin-right: 8px; border-radius: 4px; object-fit: cover;">
+      <span class="brand-title" style="font-size: 22px;">Weather by Kirill</span>
     </div>
     <div class="top-controls">
       <button id="unit-toggle" class="top-btn" title="Переключить единицы измерения">°C / °F</button>
@@ -184,6 +201,20 @@
     </section>
 
   </div>
+
+  <!-- Скрипт для плавного скрытия экрана загрузки -->
+  <script>
+    window.addEventListener('load', () => {
+      const splash = document.getElementById('splashScreen');
+      if (splash) {
+        setTimeout(() => {
+          splash.style.opacity = '0';
+          splash.style.transition = 'opacity 0.5s ease';
+          setTimeout(() => splash.remove(), 500);
+        }, 1000);
+      }
+    });
+  </script>
 
   <!-- Регистрация Service Worker для PWA -->
   <script>
