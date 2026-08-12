@@ -1,4 +1,5 @@
 # 🌦️ Weather World
+*You can save it as app or label in GOOGLE.
 
 An interactive real-time weather web application featuring adaptive design and visual atmospheric effects.
 
@@ -31,6 +32,7 @@ An interactive real-time weather web application featuring adaptive design and v
    
 
 # 🌦️ Мир Погоды (Weather World)
+*Вы можете скачать его как приложение или как ярлык в Гугл.
 
 Интерактивное веб-приложение для отслеживания погоды в реальном времени с адаптивным дизайном и графическими спецэффектами.
 
