@@ -660,3 +660,54 @@ select#lang-select option {
     grid-template-columns: 1fr;
   }
 }
+/* Стили для контейнера экрана загрузки */
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #0f172a; /* Темный фон в тон твоему приложению */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  gap: 20px;
+}
+
+/* Убираем белый фон у картинки и добавляем мягкое свечение */
+.splash-logo {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  background: transparent; /* Убирает белый прямоугольник */
+  filter: drop-shadow(0 10px 20px rgba(79, 172, 254, 0.3));
+  animation: floatLogo 3s ease-in-out infinite;
+}
+
+/* Эффект легкого покачивания логотипа */
+@keyframes floatLogo {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Красивый кастомный лоадер (спиннер) вместо стандартного */
+.splash-loader {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #4facfe;
+  border-radius: 50%;
+  animation: spinLoader 0.8s linear infinite;
+}
+
+@keyframes spinLoader {
+  to {
+    transform: rotate(360deg);
+  }
+}
