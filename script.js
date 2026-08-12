@@ -416,13 +416,28 @@ function renderTemperatureChart(forecastList) {
   });
 }
 
+/**
+ * 🌟 Скелетон-лоадер для прогноза на 5 дней
+ */
 async function fetch5DayForecast(lat, lon) {
+  const grid = document.getElementById('forecast-grid');
+  if (!grid) return;
+
+  // Включаем скелетоны перед запросом
+  grid.innerHTML = Array(5).fill(0).map(() => `
+    <div class="forecast-card skeleton">
+      <div class="day">---</div>
+      <div class="icon">---</div>
+      <div class="temp">---</div>
+    </div>
+  `).join('');
+
   try {
     const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`);
     const data = await res.json();
     const daily = data.list.filter((_, idx) => idx % 8 === 0);
-    const grid = document.getElementById('forecast-grid');
-    if (!grid) return;
+    
+    // Очищаем скелетоны и вставляем актуальные данные
     grid.innerHTML = '';
     daily.slice(0, 5).forEach(day => {
       const dateStr = new Date(day.dt * 1000).toLocaleDateString(currentLang === 'uz' ? 'uz-UZ' : currentLang, { weekday: 'short' });
@@ -438,7 +453,10 @@ async function fetch5DayForecast(lat, lon) {
       `;
     });
     renderTemperatureChart(data.list);
-  } catch (err) { console.error(err); }
+  } catch (err) { 
+    grid.innerHTML = '<p>Ошибка загрузки данных</p>';
+    console.error(err); 
+  }
 }
 
 async function fetchUVIndex(lat, lon) {
@@ -487,9 +505,26 @@ async function fetchWeather(city) {
   } catch (err) { console.error(err); }
 }
 
+/**
+ * 🌟 Обработка данных с добавлением эффекта загрузки на главные блоки
+ */
 async function processWeatherData(data) {
   currentWeatherData = data;
+  
+  // Включаем скелетоны на главных элементах погоды во время запроса УФ-индекса
+  const skeletonTargets = ['temp-value', 'weather-desc', 'humidity', 'wind-speed', 'pressure'];
+  skeletonTargets.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('skeleton');
+  });
+
   const uv = await fetchUVIndex(data.coord.lat, data.coord.lon);
+  
+  // Убираем скелетоны
+  skeletonTargets.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('skeleton');
+  });
   
   updateCornerCityPhoto(data.name);
   updateStarButton(data.name);
